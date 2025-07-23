@@ -12,6 +12,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import UserManagementPage from './pages/UserManagementPage';
 import SystemImagesManager from './components/system-images/SystemImagesManager';
 import VMOffersPage from './pages/VmOffersPage';
+import VmManagement from './pages/VmManagement';
 
 import { isTokenExpired, getTokenExpirationTime } from './utils/jwtUtils';
 import { useTokenExpirationMonitor } from './hooks/useTokenExpirationMonitor';
@@ -176,6 +177,18 @@ const AppContent = () => {
             </PublicRoute>
           } 
         />
+
+         <Route 
+          path="/vms" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={true}>
+                <VmManagement />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+
 
 
     </Routes>)

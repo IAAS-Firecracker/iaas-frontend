@@ -11,9 +11,14 @@ import {
   Alert,
   Tabs,
   Tab,
-  Paper
+  Paper,
+  Typography
 } from '@mui/material';
-import { Refresh as RefreshIcon } from '@mui/icons-material';
+import { Refresh as RefreshIcon,
+    Terminal as TerminalIcon,
+    Code as CodeIcon
+
+ } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import  useUser  from '../../hooks/useUser';
 import  useVmHost  from '../../hooks/useVmHost';

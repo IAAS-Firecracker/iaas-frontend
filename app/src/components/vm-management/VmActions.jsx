@@ -17,6 +17,7 @@ import {
   LinearProgress,
   Alert,
   Tooltip,
+  CircularProgress,
   useTheme
 } from '@mui/material';
 import {
@@ -28,7 +29,11 @@ import {
   Close as CloseIcon,
   MoreVert as MoreVertIcon,
   Computer as ComputerIcon,
-  RestartAlt as RestartAltIcon
+  RestartAlt as RestartAltIcon,
+  Dns as DnsIcon,
+  Memory as MemoryIcon,
+  Storage as StorageIcon
+  
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import useUser  from '../../hooks/useUser';

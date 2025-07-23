@@ -20,7 +20,9 @@ import {
   Memory as MemoryIcon,
   Storage as StorageIcon,
   Start as StartIcon,
-  Stop as StopIcon
+  Stop as StopIcon,
+  Refresh as RefreshIcon
+
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import StatusChip from './StatusChip';
