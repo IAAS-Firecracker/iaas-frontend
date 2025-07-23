@@ -33,7 +33,8 @@ import {
   LinearProgress,
   Tab,
   Tabs,
-  useTheme
+  useTheme,
+  Container
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -284,7 +285,13 @@ const SystemImagesManager = () => {
   });
 
   return (
-    <Box sx={{ p: theme.spacing(3) }}>
+    <Container sx={{ 
+      mt: 5, 
+      mb: 6,
+      [theme.breakpoints.up('md')]: {
+        px: 4
+      }
+    }} maxWidth="lg">
       {/* Alerts */}
       {error && (
         <Alert severity="error" onClose={clearErrors} sx={{ mb: 2 }}>
@@ -696,7 +703,7 @@ const SystemImagesManager = () => {
           )}
         </DialogActions>
       </Dialog>
-    </Box>
+    </Container>
   );
 };
 

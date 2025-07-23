@@ -10,6 +10,8 @@ import ClusterManagementPage from './pages/ClusterManagementPage';
 import ProfilePage from './pages/ProfilePage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import UserManagementPage from './pages/UserManagementPage';
+import SystemImagesManager from './components/system-images/SystemImagesManager';
+import VMOffersPage from './pages/VmOffersPage';
 
 import { isTokenExpired, getTokenExpirationTime } from './utils/jwtUtils';
 import { useTokenExpirationMonitor } from './hooks/useTokenExpirationMonitor';
@@ -148,6 +150,28 @@ const AppContent = () => {
             <PublicRoute>
               <Layout showHeader={true} showFooter={true}>
                 <ClusterManagementPage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+
+         <Route 
+          path="/system-images" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={true}>
+                <SystemImagesManager />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+
+        <Route 
+          path="/offers" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={true}>
+                <VMOffersPage />
               </Layout>
             </PublicRoute>
           } 

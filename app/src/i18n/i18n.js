@@ -653,6 +653,93 @@ const resources = {
                     }
                 }
             },
+            vmOffers: {
+                title: "VM Offers Management",
+                buttons: {
+                    refresh: "Refresh",
+                    createOffer: "Create VM Offer",
+                    edit: "Edit",
+                    delete: "Delete",
+                    save: "Save",
+                    cancel: "Cancel",
+                    clearSearch: "Clear Search"
+                },
+                filters: {
+                    activeOnly: "Active Only",
+                    viewMode: {
+                        grid: "Grid View",
+                        table: "Table View"
+                    }
+                },
+                table: {
+                    headers: {
+                        name: "Name",
+                        description: "Description",
+                        cpu: "CPU",
+                        memory: "Memory",
+                        storage: "Storage",
+                        price: "Price",
+                        actions: "Actions"
+                    },
+                    noOffers: "No VM offers found"
+                },
+                dialogs: {
+                    create: {
+                        title: "Create VM Offer",
+                        resources: "Resources",
+                        pricing: "Pricing",
+                        summary: "Summary",
+                        monthlyEstimate: "Monthly Cost Estimate",
+                        estimateNote: "Based on continuous usage for 30 days"
+                    },
+                    edit: {
+                        title: "Edit VM Offer"
+                    },
+                    delete: {
+                        title: "Confirm Deletion",
+                        message: "Are you sure you want to delete the VM offer \"{name}\"?",
+                        warning: "This action cannot be undone. VMs already using this offer will not be affected."
+                    }
+                },
+                form: {
+                    labels: {
+                        name: "Name",
+                        description: "Description",
+                        cpuCount: "CPU Cores",
+                        memorySize: "Memory (MiB)",
+                        diskSize: "Disk Size (GiB)",
+                        price: "Price per Hour ($)"
+                    },
+                    placeholders: {
+                        name: "e.g., Standard, Performance, Enterprise",
+                        description: "Provide a description of this VM offer"
+                    },
+                    errors: {
+                        required: "This field is required",
+                        cpuMin: "CPU count must be at least 1",
+                        memoryMin: "Memory must be at least 512 MiB",
+                        diskMin: "Disk size must be at least 1 GiB",
+                        pricePositive: "Price must be a positive number"
+                    },
+                    helperText: {
+                        memory: "1024 MiB = 1 GiB",
+                        disk: "1 GiB = 1024 MiB"
+                    }
+                },
+                messages: {
+                    created: "VM offer created successfully!",
+                    updated: "VM offer updated successfully!",
+                    deleted: "VM offer deleted successfully!",
+                    error: {
+                        fetch: "Failed to fetch VM offers. Please try again.",
+                        create: "Failed to create VM offer. Please try again.",
+                        update: "Failed to update VM offer. Please try again.",
+                        delete: "Failed to delete VM offer. Please try again.",
+                        search: "Search failed. Please try again."
+                    }
+                }
+            },
+
 
             // Add this to the en.translation object
             footer: {
@@ -1344,6 +1431,92 @@ const resources = {
                 }
             },
 
+            vmOffers: {
+                title: "Gestion des Offres VM",
+                buttons: {
+                    refresh: "Actualiser",
+                    createOffer: "Créer une Offre VM",
+                    edit: "Modifier",
+                    delete: "Supprimer",
+                    save: "Enregistrer",
+                    cancel: "Annuler",
+                    clearSearch: "Effacer la Recherche"
+                },
+                filters: {
+                    activeOnly: "Actives Seulement",
+                    viewMode: {
+                        grid: "Vue Grille",
+                        table: "Vue Tableau"
+                    }
+                },
+                table: {
+                    headers: {
+                        name: "Nom",
+                        description: "Description",
+                        cpu: "CPU",
+                        memory: "Mémoire",
+                        storage: "Stockage",
+                        price: "Prix",
+                        actions: "Actions"
+                    },
+                    noOffers: "Aucune offre VM trouvée"
+                },
+                dialogs: {
+                    create: {
+                        title: "Créer une Offre VM",
+                        resources: "Ressources",
+                        pricing: "Tarification",
+                        summary: "Résumé",
+                        monthlyEstimate: "Coût Mensuel Estimé",
+                        estimateNote: "Basé sur une utilisation continue pendant 30 jours"
+                    },
+                    edit: {
+                        title: "Modifier l'Offre VM"
+                    },
+                    delete: {
+                        title: "Confirmer la Suppression",
+                        message: "Êtes-vous sûr de vouloir supprimer l'offre VM \"{name}\"?",
+                        warning: "Cette action est irréversible. Les VM utilisant cette offre ne seront pas affectées."
+                    }
+                },
+                form: {
+                    labels: {
+                        name: "Nom",
+                        description: "Description",
+                        cpuCount: "Cœurs CPU",
+                        memorySize: "Mémoire (MiB)",
+                        diskSize: "Taille du Disque (GiB)",
+                        price: "Prix par Heure ($)"
+                    },
+                    placeholders: {
+                        name: "ex: Standard, Performance, Entreprise",
+                        description: "Fournir une description de cette offre VM"
+                    },
+                    errors: {
+                        required: "Ce champ est requis",
+                        cpuMin: "Le nombre de CPU doit être d'au moins 1",
+                        memoryMin: "La mémoire doit être d'au moins 512 MiB",
+                        diskMin: "La taille du disque doit être d'au moins 1 GiB",
+                        pricePositive: "Le prix doit être un nombre positif"
+                    },
+                    helperText: {
+                        memory: "1024 MiB = 1 GiB",
+                        disk: "1 GiB = 1024 MiB"
+                    }
+                },
+                messages: {
+                    created: "Offre VM créée avec succès!",
+                    updated: "Offre VM mise à jour avec succès!",
+                    deleted: "Offre VM supprimée avec succès!",
+                    error: {
+                        fetch: "Échec de la récupération des offres VM. Veuillez réessayer.",
+                        create: "Échec de la création de l'offre VM. Veuillez réessayer.",
+                        update: "Échec de la mise à jour de l'offre VM. Veuillez réessayer.",
+                        delete: "Échec de la suppression de l'offre VM. Veuillez réessayer.",
+                        search: "Échec de la recherche. Veuillez réessayer."
+                    }
+                }
+            },
 
 
 
