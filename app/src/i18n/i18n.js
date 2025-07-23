@@ -739,6 +739,55 @@ const resources = {
                     }
                 }
             },
+            vmActions: {
+                title: "Virtual Machines",
+                searchPlaceholder: "Search VMs by name...",
+                noVmsFound: "No virtual machines found.",
+                createNewVm: "Create a new VM in the 'Create VM' tab.",
+                refresh: "Refresh",
+                status: {
+                    running: "Running",
+                    stopped: "Stopped",
+                    error: "Error"
+                },
+                actions: {
+                    start: "Start",
+                    stop: "Stop",
+                    delete: "Delete",
+                    restart: "Restart",
+                    details: "Details"
+                },
+                columns: {
+                    name: "Name",
+                    status: "Status",
+                    macAddress: "MAC Address",
+                    resources: "Resources",
+                    ipAddress: "IP Address",
+                    actions: "Actions"
+                },
+                details: {
+                    title: "VM Details: {name}",
+                    generalInfo: "General Information",
+                    resources: "Resources",
+                    networkInfo: "Network Information",
+                    metrics: "Performance Metrics",
+                    close: "Close"
+                },
+                confirmations: {
+                    stopTitle: "Confirm Stop VM",
+                    stopMessage: "Are you sure you want to stop the VM \"{name}\"? Any running applications and unsaved data may be lost.",
+                    deleteTitle: "Confirm Delete VM",
+                    deleteMessage: "Are you sure you want to delete the VM \"{name}\"? This action cannot be undone.",
+                    cancel: "Cancel",
+                    confirm: "Confirm"
+                },
+                notifications: {
+                    starting: "VM \"{name}\" is starting up. This might take a moment.",
+                    stopping: "VM \"{name}\" is stopping. This might take a moment.",
+                    deleted: "VM \"{name}\" has been deleted.",
+                    error: "Failed to {action} VM \"{name}\". Please try again."
+                }
+            },
 
 
             // Add this to the en.translation object
@@ -1518,7 +1567,55 @@ const resources = {
                 }
             },
 
-
+            vmActions: {
+                title: "Machines Virtuelles",
+                searchPlaceholder: "Rechercher des VM par nom...",
+                noVmsFound: "Aucune machine virtuelle trouvée.",
+                createNewVm: "Créez une nouvelle VM dans l'onglet 'Créer une VM'.",
+                refresh: "Rafraîchir",
+                status: {
+                    running: "En cours",
+                    stopped: "Arrêté",
+                    error: "Erreur"
+                },
+                actions: {
+                    start: "Démarrer",
+                    stop: "Arrêter",
+                    delete: "Supprimer",
+                    restart: "Redémarrer",
+                    details: "Détails"
+                },
+                columns: {
+                    name: "Nom",
+                    status: "Statut",
+                    macAddress: "Adresse MAC",
+                    resources: "Ressources",
+                    ipAddress: "Adresse IP",
+                    actions: "Actions"
+                },
+                details: {
+                    title: "Détails de la VM : {name}",
+                    generalInfo: "Informations Générales",
+                    resources: "Ressources",
+                    networkInfo: "Informations Réseau",
+                    metrics: "Mesures de Performance",
+                    close: "Fermer"
+                },
+                confirmations: {
+                    stopTitle: "Confirmer l'arrêt de la VM",
+                    stopMessage: "Êtes-vous sûr de vouloir arrêter la VM \"{name}\"? Toutes les applications en cours d'exécution et les données non enregistrées peuvent être perdues.",
+                    deleteTitle: "Confirmer la suppression de la VM",
+                    deleteMessage: "Êtes-vous sûr de vouloir supprimer la VM \"{name}\"? Cette action ne peut pas être annulée.",
+                    cancel: "Annuler",
+                    confirm: "Confirmer"
+                },
+                notifications: {
+                    starting: "La VM \"{name}\" démarre. Cela peut prendre un moment.",
+                    stopping: "La VM \"{name}\" s'arrête. Cela peut prendre un moment.",
+                    deleted: "La VM \"{name}\" a été supprimée.",
+                    error: "Échec de {action} la VM \"{name}\". Veuillez réessayer."
+                }
+            },
 
             // Add this to the fr.translation object
             footer: {
