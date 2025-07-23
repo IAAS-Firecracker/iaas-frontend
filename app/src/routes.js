@@ -1,0 +1,136 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+// Pages
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import ClusterManagementPage from './pages/ClusterManagementPage';
+
+import { isTokenExpired, getTokenExpirationTime } from './utils/jwtUtils';
+import { useTokenExpirationMonitor } from './hooks/useTokenExpirationMonitor';
+// Common Components
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import { AnimatePresence } from 'framer-motion';
+
+
+// Protected Route Component
+const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+    const { isAuthenticated, currentUser, token } = useSelector(state => state.user);
+
+    console.log("Token expires in ", (new Date(getTokenExpirationTime(token))).toISOString());
+    //console.log(isAuthenticated)
+    if (!isAuthenticated || !token || isTokenExpired(token)) {
+        return <Navigate to="/login" replace />;
+    }
+
+    if (allowedRoles.length > 0 && !allowedRoles.includes(currentUser?.role)) {
+        return <Navigate to="/dashboard" replace />;
+    }
+
+    return children;
+};
+
+// Public Route Component (redirect to dashboard if already logged in)
+const PublicRoute = ({ children }) => {
+    const { isAuthenticated, currentUser } = useSelector(state => state.user);
+
+    if (isAuthenticated) {
+        // Role-based redirect
+        const redirectTo = '/dashboard';
+
+        console.log('User authenticated, redirecting to:', redirectTo);
+        return <Navigate to={redirectTo} replace />;
+    }
+
+    return children;
+};
+
+// Layout Component
+const Layout = ({ children, showHeader = true, showFooter = true }) => {
+    return (
+        <div className="min-h-screen flex flex-col">
+            {showHeader && <Header />}
+            <main className="flex-grow">
+                {children}
+            </main>
+            {showFooter && <Footer />}
+        </div>
+    );
+};
+
+
+const AppContent = () => {
+    // Monitor token expiration globally
+    useTokenExpirationMonitor();
+
+    return (<Routes>
+        {/* Public Routes */}
+        <Route
+            path="/"
+            element={
+                <Layout showHeader={true}>
+                    <LandingPage />
+                </Layout>
+            }
+        />
+        <Route 
+          path="/login" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={false}>
+                <LoginPage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+
+         <Route 
+          path="/register" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={false}>
+                <SignupPage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+         <Route 
+          path="/signup" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={false}>
+                <SignupPage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+
+         <Route 
+          path="/clusters" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={true}>
+                <ClusterManagementPage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+
+    </Routes>)
+}
+const AppRoutes = () => {
+
+    return (
+        <Router>
+            <AnimatePresence mode="wait">
+                <AppContent />
+            </AnimatePresence>
+
+        </Router>
+    );
+};
+
+export default AppRoutes;
