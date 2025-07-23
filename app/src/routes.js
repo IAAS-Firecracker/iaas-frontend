@@ -7,6 +7,8 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ClusterManagementPage from './pages/ClusterManagementPage';
+import ProfilePage from './pages/ProfilePage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 import { isTokenExpired, getTokenExpirationTime } from './utils/jwtUtils';
 import { useTokenExpirationMonitor } from './hooks/useTokenExpirationMonitor';
@@ -109,6 +111,27 @@ const AppContent = () => {
         />
 
          <Route 
+          path="/profile" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={true}>
+                <ProfilePage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+         <Route 
+          path="/password-reset" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={true}>
+                <ResetPasswordPage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+
+         <Route 
           path="/clusters" 
           element={
             <PublicRoute>
@@ -118,6 +141,7 @@ const AppContent = () => {
             </PublicRoute>
           } 
         />
+
 
     </Routes>)
 }

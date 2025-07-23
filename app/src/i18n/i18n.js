@@ -521,7 +521,57 @@ const resources = {
                 helpTitle: "Need Help?",
                 helpText: "Learn more about managing clusters in our <1>documentation</1> or <3>contact support</3> if you encounter any issues."
             },
-
+            profile: {
+                title: "User Profile",
+                tabs: {
+                    profile: "Profile",
+                    edit: "Edit Profile",
+                    password: "Change Password"
+                },
+                fields: {
+                    name: "Name",
+                    email: "Email",
+                    currentPassword: "Current Password",
+                    newPassword: "New Password"
+                },
+                buttons: {
+                    update: "Update Profile",
+                    changePassword: "Change Password",
+                    delete: "Delete Profile"
+                },
+                messages: {
+                    updateSuccess: "Profile updated successfully!",
+                    passwordChangeSuccess: "Password changed successfully!",
+                    deleteConfirm: "Are you sure you want to delete your profile? This action cannot be undone.",
+                    deleteSuccess: "Profile deleted successfully!"
+                }
+            },
+            resetPassword: {
+                title: "Reset Password",
+                steps: {
+                    email: "Enter your email to receive a reset code",
+                    code: "Check your email for the reset code and enter it below",
+                    password: "Enter your new password to complete the reset"
+                },
+                buttons: {
+                    sendCode: "Send Reset Code",
+                    verifyCode: "Verify Code",
+                    resetPassword: "Reset Password",
+                    resendCode: "Resend Code"
+                },
+                messages: {
+                    codeSent: "Reset code sent to your email",
+                    codeVerified: "Code verified successfully",
+                    passwordReset: "Password reset successfully"
+                }
+            },
+            common: {
+                errors: {
+                    required: "This field is required",
+                    emailInvalid: "Please enter a valid email address",
+                    passwordMismatch: "Passwords don't match"
+                }
+            },
 
             // Add this to the en.translation object
             footer: {
@@ -1079,6 +1129,58 @@ const resources = {
                 helpTitle: "Besoin d'Aide ?",
                 helpText: "Apprenez-en plus sur la gestion des clusters dans notre <1>documentation</1> ou <3>contactez le support</3> si vous rencontrez des problèmes."
             },
+            profile: {
+                title: "Profil Utilisateur",
+                tabs: {
+                    profile: "Profil",
+                    edit: "Modifier Profil",
+                    password: "Changer Mot de Passe"
+                },
+                fields: {
+                    name: "Nom",
+                    email: "Email",
+                    currentPassword: "Mot de Passe Actuel",
+                    newPassword: "Nouveau Mot de Passe"
+                },
+                buttons: {
+                    update: "Mettre à Jour",
+                    changePassword: "Changer Mot de Passe",
+                    delete: "Supprimer Profil"
+                },
+                messages: {
+                    updateSuccess: "Profil mis à jour avec succès!",
+                    passwordChangeSuccess: "Mot de passe changé avec succès!",
+                    deleteConfirm: "Êtes-vous sûr de vouloir supprimer votre profil? Cette action est irréversible.",
+                    deleteSuccess: "Profil supprimé avec succès!"
+                }
+            },
+            resetPassword: {
+                title: "Réinitialiser Mot de Passe",
+                steps: {
+                    email: "Entrez votre email pour recevoir un code de réinitialisation",
+                    code: "Vérifiez votre email pour le code et entrez-le ci-dessous",
+                    password: "Entrez votre nouveau mot de passe pour compléter la réinitialisation"
+                },
+                buttons: {
+                    sendCode: "Envoyer Code",
+                    verifyCode: "Vérifier Code",
+                    resetPassword: "Réinitialiser Mot de Passe",
+                    resendCode: "Renvoyer Code"
+                },
+                messages: {
+                    codeSent: "Code de réinitialisation envoyé à votre email",
+                    codeVerified: "Code vérifié avec succès",
+                    passwordReset: "Mot de passe réinitialisé avec succès"
+                }
+            },
+            common: {
+                errors: {
+                    required: "Ce champ est requis",
+                    emailInvalid: "Veuillez entrer une adresse email valide",
+                    passwordMismatch: "Les mots de passe ne correspondent pas"
+                }
+            },
+
 
 
 
