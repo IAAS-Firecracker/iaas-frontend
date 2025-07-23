@@ -572,6 +572,87 @@ const resources = {
                     passwordMismatch: "Passwords don't match"
                 }
             },
+            userManagement: {
+                title: "User Management",
+                buttons: {
+                    refresh: "Refresh",
+                    createUser: "Create User",
+                    edit: "Edit",
+                    delete: "Delete",
+                    resetPassword: "Reset Password",
+                    viewDetails: "View Details",
+                    saveChanges: "Save Changes",
+                    cancel: "Cancel",
+                    clearFilters: "Clear Filters"
+                },
+                filters: {
+                    title: "Filters",
+                    role: {
+                        all: "All Roles",
+                        admin: "Administrator",
+                        user: "User"
+                    },
+                    status: {
+                        all: "All Statuses",
+                        active: "Active",
+                        inactive: "Inactive"
+                    }
+                },
+                table: {
+                    headers: {
+                        name: "Name",
+                        email: "Email",
+                        role: "Role",
+                        status: "Status",
+                        actions: "Actions"
+                    },
+                    noUsers: "No users found"
+                },
+                dialogs: {
+                    createUser: {
+                        title: "Create New User",
+                        userType: "User Type",
+                        regularUser: "Regular User",
+                        administrator: "Administrator",
+                        adminDescription: "Administrators have full access to manage all system resources and other users.",
+                        userDescription: "Regular users have limited permissions based on their assigned resources.",
+                        accountStatus: "Account Status",
+                        statusHelper: "Active users can immediately login to the system"
+                    },
+                    editUser: {
+                        title: "Edit User"
+                    },
+                    resetPassword: {
+                        title: "Reset Password",
+                        description: "Enter a new password for {name}"
+                    },
+                    deleteUser: {
+                        title: "Confirm Deletion",
+                        description: "Are you sure you want to delete the user {name}?",
+                        warning: "This action cannot be undone. The user will be permanently removed from the system."
+                    },
+                    viewUser: {
+                        title: "User Details",
+                        userId: "User ID",
+                        createdAt: "Created At",
+                        lastUpdated: "Last Updated",
+                        close: "Close"
+                    }
+                },
+                messages: {
+                    userCreated: "User created successfully!",
+                    userUpdated: "User updated successfully!",
+                    passwordReset: "Password reset successfully!",
+                    userDeleted: "User deleted successfully!",
+                    error: {
+                        fetchUsers: "Failed to fetch users. Please try again.",
+                        createUser: "Failed to create user. Please try again.",
+                        updateUser: "Failed to update user. Please try again.",
+                        resetPassword: "Failed to reset password. Please try again.",
+                        deleteUser: "Failed to delete user. Please try again."
+                    }
+                }
+            },
 
             // Add this to the en.translation object
             footer: {
@@ -1178,6 +1259,88 @@ const resources = {
                     required: "Ce champ est requis",
                     emailInvalid: "Veuillez entrer une adresse email valide",
                     passwordMismatch: "Les mots de passe ne correspondent pas"
+                }
+            },
+
+            userManagement: {
+                title: "Gestion des Utilisateurs",
+                buttons: {
+                    refresh: "Actualiser",
+                    createUser: "Créer Utilisateur",
+                    edit: "Modifier",
+                    delete: "Supprimer",
+                    resetPassword: "Réinitialiser Mot de Passe",
+                    viewDetails: "Voir Détails",
+                    saveChanges: "Enregistrer",
+                    cancel: "Annuler",
+                    clearFilters: "Effacer Filtres"
+                },
+                filters: {
+                    title: "Filtres",
+                    role: {
+                        all: "Tous les Rôles",
+                        admin: "Administrateur",
+                        user: "Utilisateur"
+                    },
+                    status: {
+                        all: "Tous les Statuts",
+                        active: "Actif",
+                        inactive: "Inactif"
+                    }
+                },
+                table: {
+                    headers: {
+                        name: "Nom",
+                        email: "Email",
+                        role: "Rôle",
+                        status: "Statut",
+                        actions: "Actions"
+                    },
+                    noUsers: "Aucun utilisateur trouvé"
+                },
+                dialogs: {
+                    createUser: {
+                        title: "Créer un Nouvel Utilisateur",
+                        userType: "Type d'Utilisateur",
+                        regularUser: "Utilisateur Standard",
+                        administrator: "Administrateur",
+                        adminDescription: "Les administrateurs ont un accès complet pour gérer toutes les ressources système et autres utilisateurs.",
+                        userDescription: "Les utilisateurs standards ont des permissions limitées basées sur leurs ressources assignées.",
+                        accountStatus: "Statut du Compte",
+                        statusHelper: "Les utilisateurs actifs peuvent se connecter immédiatement au système"
+                    },
+                    editUser: {
+                        title: "Modifier Utilisateur"
+                    },
+                    resetPassword: {
+                        title: "Réinitialiser Mot de Passe",
+                        description: "Entrez un nouveau mot de passe pour {name}"
+                    },
+                    deleteUser: {
+                        title: "Confirmer la Suppression",
+                        description: "Êtes-vous sûr de vouloir supprimer l'utilisateur {name}?",
+                        warning: "Cette action est irréversible. L'utilisateur sera définitivement supprimé du système."
+                    },
+                    viewUser: {
+                        title: "Détails de l'Utilisateur",
+                        userId: "ID Utilisateur",
+                        createdAt: "Créé Le",
+                        lastUpdated: "Dernière Mise à Jour",
+                        close: "Fermer"
+                    }
+                },
+                messages: {
+                    userCreated: "Utilisateur créé avec succès!",
+                    userUpdated: "Utilisateur mis à jour avec succès!",
+                    passwordReset: "Mot de passe réinitialisé avec succès!",
+                    userDeleted: "Utilisateur supprimé avec succès!",
+                    error: {
+                        fetchUsers: "Échec de la récupération des utilisateurs. Veuillez réessayer.",
+                        createUser: "Échec de la création de l'utilisateur. Veuillez réessayer.",
+                        updateUser: "Échec de la mise à jour de l'utilisateur. Veuillez réessayer.",
+                        resetPassword: "Échec de la réinitialisation du mot de passe. Veuillez réessayer.",
+                        deleteUser: "Échec de la suppression de l'utilisateur. Veuillez réessayer."
+                    }
                 }
             },
 

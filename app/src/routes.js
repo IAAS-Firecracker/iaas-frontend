@@ -9,6 +9,7 @@ import SignupPage from './pages/SignupPage';
 import ClusterManagementPage from './pages/ClusterManagementPage';
 import ProfilePage from './pages/ProfilePage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import UserManagementPage from './pages/UserManagementPage';
 
 import { isTokenExpired, getTokenExpirationTime } from './utils/jwtUtils';
 import { useTokenExpirationMonitor } from './hooks/useTokenExpirationMonitor';
@@ -126,6 +127,16 @@ const AppContent = () => {
             <PublicRoute>
               <Layout showHeader={true} showFooter={true}>
                 <ResetPasswordPage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+         <Route 
+          path="/users" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={true}>
+                <UserManagementPage />
               </Layout>
             </PublicRoute>
           } 

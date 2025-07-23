@@ -731,7 +731,7 @@ const Header = () => {
         sx={{
           flexGrow: 1,
           p: 1,
-          mb:1,
+          mb:4,
           width: isAuthenticated ? `calc(100% - ${drawerWidth}px)` : '100%',
           marginLeft: isAuthenticated ? `${drawerWidth}px` : 0,
           transition: theme.transitions.create(['margin', 'width'], {
