@@ -788,6 +788,62 @@ const resources = {
                     error: "Failed to {action} VM \"{name}\". Please try again."
                 }
             },
+            vmConsole: {
+                title: "VM Console",
+                selectVm: "Select Virtual Machine",
+                refreshVms: "Refresh VM List",
+                noRunningVms: "No running virtual machines found.",
+                startVmToAccess: "Start a VM in the 'Manage VMs' tab to access the console.",
+                tabs: {
+                    console: "Console",
+                    information: "Information"
+                },
+                console: {
+                    connect: "Connect to Console",
+                    connecting: "Connecting...",
+                    disconnect: "Disconnect",
+                    notConnected: "Console not connected",
+                    connected: "Console connected",
+                    typeCommands: "Type commands here...",
+                    sendCommand: "Send Command",
+                    clear: "Clear Console",
+                    copy: "Copy Output",
+                    download: "Download Log",
+                    helpTip: "Tip: Type \"help\" to see available commands. Press Enter to execute commands."
+                },
+                information: {
+                    vmInfo: "VM Information",
+                    connectionInfo: "Connection Information",
+                    consoleHelp: "Console Usage Help",
+                    name: "Name",
+                    os: "Operating System",
+                    status: "Status",
+                    cpuCores: "CPU Cores",
+                    memory: "Memory",
+                    storage: "Storage",
+                    ipAddress: "IP Address",
+                    macAddress: "MAC Address",
+                    username: "Username",
+                    notAssigned: "Not assigned",
+                    remoteAccessTip: "You can connect to this VM using SSH or other remote access tools using the information above.",
+                    basicCommands: "Basic Commands",
+                    consoleControls: "Console Controls",
+                    simulationNote: "Note: This is a simulated console for demonstration purposes."
+                },
+                commands: {
+                    help: "Display available commands",
+                    date: "Show current date and time",
+                    hostname: "Display VM hostname",
+                    uptime: "Show system uptime",
+                    ls: "List files in current directory",
+                    clear: "Clear console output"
+                },
+                errors: {
+                    fetchVmsFailed: "Failed to fetch your virtual machines. Please try again.",
+                    connectFailed: "Failed to connect to VM console. Please try again.",
+                    vmNotRunning: "Unable to connect to VM console. The VM may not be running."
+                }
+            },
 
 
             // Add this to the en.translation object
@@ -1616,6 +1672,62 @@ const resources = {
                     error: "Échec de {action} la VM \"{name}\". Veuillez réessayer."
                 }
             },
+            vmConsole: {
+  title: "Console VM",
+  selectVm: "Sélectionner une machine virtuelle",
+  refreshVms: "Actualiser la liste des VM",
+  noRunningVms: "Aucune machine virtuelle en cours d'exécution trouvée.",
+  startVmToAccess: "Démarrez une VM dans l'onglet \"Gérer les VM\" pour accéder à la console.",
+  tabs: {
+    console: "Console",
+    information: "Informations"
+  },
+  console: {
+    connect: "Connecter à la console",
+    connecting: "Connexion...",
+    disconnect: "Déconnecter",
+    notConnected: "Console non connectée",
+    connected: "Console connectée",
+    typeCommands: "Tapez des commandes ici...",
+    sendCommand: "Envoyer la commande",
+    clear: "Effacer la console",
+    copy: "Copier la sortie",
+    download: "Télécharger le journal",
+    helpTip: "Astuce : Tapez \"help\" pour voir les commandes disponibles. Appuyez sur Entrée pour exécuter des commandes."
+  },
+  information: {
+    vmInfo: "Informations VM",
+    connectionInfo: "Informations de connexion",
+    consoleHelp: "Aide à l'utilisation de la console",
+    name: "Nom",
+    os: "Système d'exploitation",
+    status: "Statut",
+    cpuCores: "Cœurs CPU",
+    memory: "Mémoire",
+    storage: "Stockage",
+    ipAddress: "Adresse IP",
+    macAddress: "Adresse MAC",
+    username: "Nom d'utilisateur",
+    notAssigned: "Non attribué",
+    remoteAccessTip: "Vous pouvez vous connecter à cette VM en utilisant SSH ou d'autres outils d'accès distant avec les informations ci-dessus.",
+    basicCommands: "Commandes de base",
+    consoleControls: "Contrôles de la console",
+    simulationNote: "Remarque : Ceci est une console simulée à des fins de démonstration."
+  },
+  commands: {
+    help: "Afficher les commandes disponibles",
+    date: "Afficher la date et l'heure actuelles",
+    hostname: "Afficher le nom d'hôte de la VM",
+    uptime: "Afficher le temps de fonctionnement du système",
+    ls: "Lister les fichiers dans le répertoire courant",
+    clear: "Effacer la sortie de la console"
+  },
+  errors: {
+    fetchVmsFailed: "Échec de la récupération de vos machines virtuelles. Veuillez réessayer.",
+    connectFailed: "Échec de la connexion à la console VM. Veuillez réessayer.",
+    vmNotRunning: "Impossible de se connecter à la console VM. La VM peut ne pas être en cours d'exécution."
+  }
+},
 
             // Add this to the fr.translation object
             footer: {
