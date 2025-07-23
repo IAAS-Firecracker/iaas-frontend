@@ -188,6 +188,7 @@ const initialState = {
   currentUser: null,
   users: [],
   selectedUser: null,
+  isAdmin: true,
   token: null,
   refreshToken: null,
   isAuthenticated: false,

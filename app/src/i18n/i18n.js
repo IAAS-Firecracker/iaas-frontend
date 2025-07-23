@@ -845,14 +845,121 @@ const resources = {
                 }
             },
             vmManagement: {
-  title: "Virtual Machine Management",
-  tabs: {
-    manage: "Manage VMs",
-    console: "VM Console",
-    create: "Create VM"
-  },
-  description: "Manage your virtual machines, access consoles, and create new instances"
-},
+                title: "Virtual Machine Management",
+                tabs: {
+                    manage: "Manage VMs",
+                    console: "VM Console",
+                    create: "Create VM"
+                },
+                description: "Manage your virtual machines, access consoles, and create new instances"
+            },
+
+            dashboard: {
+                title: "Dashboard",
+                adminTitle: "Admin Dashboard",
+                welcome: "Welcome back, {name}! Here's an overview of your cloud resources.",
+                loading: "Loading...",
+                stats: {
+                    activeVms: "Active VMs",
+                    cpuCores: "CPU Cores",
+                    memory: "Memory",
+                    storage: "Storage",
+                    totalUsers: "Total Users",
+                    systemLoad: "System Load",
+                    diskUsage: "Disk Usage",
+                    revenue: "Revenue",
+                    ofPlan: "{used} of plan",
+                    allocated: "{used}/{total} allocated",
+                    healthy: "Healthy",
+                    thisMonth: "This month"
+                },
+                quickActions: {
+                    title: "Quick Actions",
+                    manageVms: "Manage VMs",
+                    manageVmsDesc: "Manage your virtual machines",
+                    configureFirewalls: "Configure Firewalls",
+                    configureFirewallsDesc: "Manage network security",
+                    backupSettings: "Backup Settings",
+                    backupSettingsDesc: "Schedule automated backups",
+                    addUser: "Add User",
+                    addUserDesc: "Create new user account",
+                    systemSettings: "System Settings",
+                    systemSettingsDesc: "Configure global system options",
+                    securityPolicy: "Security Policy",
+                    securityPolicyDesc: "Update platform security settings",
+                    viewLogs: "View Logs",
+                    viewLogsDesc: "Access system audit logs"
+                },
+                vms: {
+                    title: "Your Virtual Machines",
+                    adminTitle: "All Virtual Machines",
+                    noVms: "No virtual machines found",
+                    createFirstVm: "Create your first VM",
+                    refresh: "Refresh",
+                    createVm: "Create VM",
+                    status: {
+                        running: "Running",
+                        paused: "Paused",
+                        stopped: "Stopped",
+                        provisioning: "Provisioning"
+                    },
+                    actions: {
+                        viewDetails: "View Details",
+                        console: "Console",
+                        resize: "Resize",
+                        backups: "Backups",
+                        transferOwnership: "Transfer Ownership",
+                        delete: "Delete"
+                    }
+                },
+                resourceUsage: {
+                    title: "Resource Usage",
+                    highUsageWarning: "Some resources are near capacity. Consider upgrading your plan."
+                },
+                networkStatus: {
+                    title: "Network Status",
+                    allSystems: "All Systems Operational",
+                    lastChecked: "Last checked: {time}",
+                    inbound: "Inbound Traffic",
+                    outbound: "Outbound Traffic"
+                },
+                systemStatus: {
+                    title: "System Status",
+                    operational: "OPERATIONAL",
+                    degraded: "DEGRADED",
+                    lastUpdated: "Last updated: {time}"
+                },
+                userManagement: {
+                    title: "User Management",
+                    addUser: "Add User",
+                    viewAll: "View All Users"
+                },
+                billing: {
+                    title: "Billing Summary",
+                    currentMonth: "Current Month",
+                    lastMonth: "Last Month",
+                    estimatedTotal: "Estimated Total",
+                    billingPeriod: "Billing period: {period}",
+                    viewDetails: "View Billing Details"
+                },
+                notifications: {
+                    title: "Notifications",
+                    viewAll: "View All",
+                    noNotifications: "No new notifications"
+                },
+                adminView: {
+                    title: "Admin View",
+                    showAllVms: "Showing all users' VMs",
+                    showYourVms: "Showing only your VMs"
+                }
+            },
+            notFound: {
+                title: "404 - Page Not Found",
+                message: "The page you're looking for doesn't exist or has been moved.",
+                goHome: "Go to Homepage",
+                goBack: "Go Back"
+            },
+
 
 
             // Add this to the en.translation object
@@ -1738,14 +1845,161 @@ const resources = {
                 }
             },
             vmManagement: {
-  title: "Gestion des Machines Virtuelles",
-  tabs: {
-    manage: "Gérer les VMs",
-    console: "Console VM",
-    create: "Créer une VM"
+                title: "Gestion des Machines Virtuelles",
+                tabs: {
+                    manage: "Gérer les VMs",
+                    console: "Console VM",
+                    create: "Créer une VM"
+                },
+                "description": "Gérez vos machines virtuelles, accédez aux consoles et créez de nouvelles instances"
+            },
+
+
+            dashboard: {
+                title: "Tableau de bord",
+                adminTitle: "Tableau de bord administrateur",
+                welcome: "Bon retour, {name} ! Voici un aperçu de vos ressources cloud.",
+                loading: "Chargement...",
+                stats: {
+                    activeVms: "VM actives",
+                    cpuCores: "Cœurs CPU",
+                    memory: "Mémoire",
+                    storage: "Stockage",
+                    totalUsers: "Utilisateurs totaux",
+                    systemLoad: "Charge système",
+                    diskUsage: "Utilisation du disque",
+                    revenue: "Revenu",
+                    ofPlan: "{used} du plan",
+                    allocated: "{used}/{total} alloués",
+                    healthy: "Sain",
+                    thisMonth: "Ce mois-ci"
+                },
+                quickActions: {
+                    title: "Actions rapides",
+                    manageVms: "Gérer les VM",
+                    manageVmsDesc: "Gérez vos machines virtuelles",
+                    configureFirewalls: "Configurer les pare-feux",
+                    configureFirewallsDesc: "Gérez la sécurité réseau",
+                    backupSettings: "Paramètres de sauvegarde",
+                    backupSettingsDesc: "Planifiez des sauvegardes automatiques",
+                    addUser: "Ajouter un utilisateur",
+                    addUserDesc: "Créer un nouveau compte utilisateur",
+                    systemSettings: "Paramètres système",
+                    systemSettingsDesc: "Configurez les options globales",
+                    securityPolicy: "Politique de sécurité",
+                    securityPolicyDesc: "Mettez à jour les paramètres de sécurité",
+                    viewLogs: "Voir les journaux",
+                    viewLogsDesc: "Accédez aux journaux d'audit"
+                },
+                vms: {
+                    title: "Vos machines virtuelles",
+                    adminTitle: "Toutes les machines virtuelles",
+                    noVms: "Aucune machine virtuelle trouvée",
+                    createFirstVm: "Créez votre première VM",
+                    refresh: "Actualiser",
+                    createVm: "Créer une VM",
+                    status: {
+                        running: "En cours d'exécution",
+                        paused: "En pause",
+                        stopped: "Arrêté",
+                        provisioning: "Approvisionnement"
+                    },
+                    actions: {
+                        viewDetails: "Voir les détails",
+                        console: "Console",
+                        resize: "Redimensionner",
+                        backups: "Sauvegardes",
+                        transferOwnership: "Transférer la propriété",
+                        delete: "Supprimer",
+                        deleteSuccess: "VM {name} a été supprimée",
+                        error: "Échec de {action} pour la VM {name}"
+                    }
+                },
+                resourceUsage: {
+                    title: "Utilisation des ressources",
+                    highUsageWarning: "Certaines ressources sont presque à pleine capacité. Envisagez de mettre à niveau votre plan."
+                },
+                networkStatus: {
+                    title: "État du réseau",
+                    allSystems: "Tous les systèmes opérationnels",
+                    lastChecked: "Dernière vérification : {time}",
+                    inbound: "Trafic entrant",
+                    outbound: "Trafic sortant"
+                },
+                systemStatus: {
+                    title: "État du système",
+                    operational: "OPÉRATIONNEL",
+                    degraded: "DÉGRADÉ",
+                    lastUpdated: "Dernière mise à jour : {time}"
+                },
+                userManagement: {
+                    title: "Gestion des utilisateurs",
+                    addUser: "Ajouter un utilisateur",
+                    viewAll: "Voir tous les utilisateurs"
+                },
+                billing: {
+                    title: "Résumé de facturation",
+                    currentMonth: "Mois en cours",
+                    lastMonth: "Mois dernier",
+                    estimatedTotal: "Total estimé",
+                    billingPeriod: "Période de facturation : {period}",
+                    viewDetails: "Voir les détails de facturation"
+                },
+                notifications: {
+                    title: "Notifications",
+                    viewAll: "Voir tout",
+                    noNotifications: "Aucune nouvelle notification"
+                },
+                adminView: {
+                    title: "Vue administrateur",
+                    showAllVms: "Afficher toutes les VM des utilisateurs",
+                    showYourVms: "Afficher uniquement vos VM"
+                }
+            },
+            common: {
+                home: "Accueil",
+                yes: "Oui",
+                no: "Non",
+                cancel: "Annuler",
+                confirm: "Confirmer",
+                save: "Enregistrer",
+                edit: "Modifier",
+                delete: "Supprimer",
+                actions: "Actions",
+                search: "Rechercher",
+                loading: "Chargement...",
+                error: "Erreur",
+                success: "Succès",
+                warning: "Avertissement",
+                info: "Information"
+            },
+            status: {
+                active: "Actif",
+                inactive: "Inactif",
+                pending: "En attente",
+                completed: "Terminé",
+                failed: "Échec"
+            },
+            roles: {
+                admin: "Administrateur",
+                user: "Utilisateur",
+                guest: "Invité"
+            },
+            validation: {
+                required: "Ce champ est requis",
+                email: "Veuillez entrer une adresse email valide",
+                minLength: "Doit contenir au moins {length} caractères",
+                maxLength: "Ne doit pas dépasser {length} caractères",
+                passwordMatch: "Les mots de passe ne correspondent pas"
+            }
+            ,
+            notFound: {
+    title: "404 - Page non trouvée",
+    message: "La page que vous recherchez n'existe pas ou a été déplacée.",
+    goHome: "Aller à l'accueil",
+    goBack: "Retour"
   },
-  "description": "Gérez vos machines virtuelles, accédez aux consoles et créez de nouvelles instances"
-},
+
 
             // Add this to the fr.translation object
             footer: {
@@ -1781,6 +2035,7 @@ const resources = {
                 subscribe: "S'abonner",
                 cookiePolicy: "Politique de cookies"
             }
+
 
 
         }

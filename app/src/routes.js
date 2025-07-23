@@ -13,6 +13,8 @@ import UserManagementPage from './pages/UserManagementPage';
 import SystemImagesManager from './components/system-images/SystemImagesManager';
 import VMOffersPage from './pages/VmOffersPage';
 import VmManagement from './pages/VmManagement';
+import DashboardPage from './pages/DashboardPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 import { isTokenExpired, getTokenExpirationTime } from './utils/jwtUtils';
 import { useTokenExpirationMonitor } from './hooks/useTokenExpirationMonitor';
@@ -186,6 +188,26 @@ const AppContent = () => {
                 <VmManagement />
               </Layout>
             </PublicRoute>
+          } 
+        />
+         <Route 
+          path="/dashboard" 
+          element={
+            <PublicRoute>
+              <Layout showHeader={true} showFooter={true}>
+                <DashboardPage />
+              </Layout>
+            </PublicRoute>
+          } 
+        />
+
+         {/* 404 Route */}
+        <Route 
+          path="*" 
+          element={
+            <Layout>
+              <NotFoundPage />
+            </Layout>
           } 
         />
 
