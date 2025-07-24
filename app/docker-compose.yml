@@ -1,0 +1,13 @@
+services:
+ 
+  frontend:
+    restart: "on-failure"
+    build: .
+    ports: 
+      - "3001:80"
+    environment:
+      - NODE_ENV=production
+    
+
+
+    
