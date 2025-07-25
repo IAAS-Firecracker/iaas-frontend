@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // Pages
@@ -26,7 +26,7 @@ import { AnimatePresence } from 'framer-motion';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-    const { isAuthenticated, currentUser, token } = useSelector(state => state.user);
+    const { isAuthenticated, user, token } = useSelector(state => state.user);
 
     console.log("Token expires in ", (new Date(getTokenExpirationTime(token))).toISOString());
     //console.log(isAuthenticated)
@@ -34,7 +34,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
         return <Navigate to="/login" replace />;
     }
 
-    if (allowedRoles.length > 0 && !allowedRoles.includes(currentUser?.role)) {
+    if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
         return <Navigate to="/dashboard" replace />;
     }
 
@@ -43,14 +43,18 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
 
 // Public Route Component (redirect to dashboard if already logged in)
 const PublicRoute = ({ children }) => {
-    const { isAuthenticated, currentUser } = useSelector(state => state.user);
+    const { isAuthenticated, user } = useSelector(state => state.user);
+
+    const location = useLocation();
 
     if (isAuthenticated) {
         // Role-based redirect
         const redirectTo = '/dashboard';
-
+     
+        if(location.pathname in ['/login', '/register']){
         console.log('User authenticated, redirecting to:', redirectTo);
         return <Navigate to={redirectTo} replace />;
+        }
     }
 
     return children;
@@ -139,11 +143,11 @@ const AppContent = () => {
          <Route 
           path="/users" 
           element={
-            <PublicRoute>
+            <ProtectedRoute allowedRoles={['ADMIN']}>
               <Layout showHeader={true} showFooter={true}>
                 <UserManagementPage />
               </Layout>
-            </PublicRoute>
+            </ProtectedRoute>
           } 
         />
 
@@ -183,21 +187,21 @@ const AppContent = () => {
          <Route 
           path="/vms" 
           element={
-            <PublicRoute>
+            <ProtectedRoute allowedRoles={['USER','ADMIN']}>
               <Layout showHeader={true} showFooter={true}>
                 <VmManagement />
               </Layout>
-            </PublicRoute>
+            </ProtectedRoute>
           } 
         />
          <Route 
           path="/dashboard" 
           element={
-            <PublicRoute>
+            <ProtectedRoute allowedRoles={['ADMIN','USER']}>
               <Layout showHeader={true} showFooter={true}>
                 <DashboardPage />
               </Layout>
-            </PublicRoute>
+            </ProtectedRoute>
           } 
         />
 

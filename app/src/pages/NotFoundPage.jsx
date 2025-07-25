@@ -37,7 +37,7 @@ const NotFoundPage = () => {
         <ErrorIcon 
           sx={{ 
             fontSize: isMobile ? 80 : 120,
-            color: theme.palette.error.main,
+            color: theme.palette.primary.main,
             mb: 3
           }} 
         />

@@ -123,7 +123,7 @@ const HeroSection = () => {
             variant="contained"
             color="secondary"
             size="large"
-            onClick={() => navigate('/signup')}
+            onClick={() => navigate('/vms')}
             endIcon={<RocketLaunch />}
             sx={{
               px: 4,

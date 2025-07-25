@@ -11,6 +11,7 @@ const apiClient = axios.create({
     }
 });
 
+        
 
 // Add a request interceptor
 apiClient.interceptors.request.use(
@@ -19,9 +20,11 @@ apiClient.interceptors.request.use(
         const state = store.getState();
         const token = state.user.token;
 
+        console.log("token : ",token);
         // If token exists, add to headers
         if(token) {
-            config.headers.userorization = `Bearer ${token}`;
+            //alert("token exist");
+            config.headers.Authorization = `Bearer ${token}`;
         }
 
         return config;
@@ -50,7 +53,7 @@ apiClient.interceptors.response.use(
 
                 if (!refreshToken) {
                     // No refresh token, redirect to login
-                    window.location.href = '/login';
+                   window.location.href = '/login';
                     return Promise.reject(error);
                 }
 
@@ -60,7 +63,7 @@ apiClient.interceptors.response.use(
                     { refresh: refreshToken }
                 );
 
-                const { access } = response.data;
+                const { access } = response.data.data;
 
                 // Update the token in the store ( this will need to dispatch action )
                 

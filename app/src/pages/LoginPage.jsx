@@ -158,49 +158,49 @@ const LoginPage = () => {
   };
 
   // Success state - user is authenticated
-  if (isAuthenticated) {
-    return (
-      <Container maxWidth="sm">
-        <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Fade in={isAuthenticated}>
-            <Paper 
-              elevation={3} 
-              sx={{ 
-                p: 4, 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center',
-                textAlign: 'center',
-                borderRadius: 2,
-                width: '100%'
-              }}
-            >
-              <CheckCircleIcon 
-                sx={{ 
-                  fontSize: 60, 
-                  color: theme.palette.success.main,
-                  mb: 2
-                }}
-              />
-              <Typography variant="h5" component="h2" gutterBottom>
-                {t('login.success.title')}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 3 }}>
-                {t('login.success.message')}
-              </Typography>
-              <Button 
-                variant="contained" 
-                href="/dashboard"
-                sx={{ borderRadius: 28, px: 4 }}
-              >
-                {t('login.success.goToDashboard')}
-              </Button>
-            </Paper>
-          </Fade>
-        </Box>
-      </Container>
-    );
-  }
+//   if (isAuthenticated) {
+//     return (
+//       <Container maxWidth="sm">
+//         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+//           <Fade in={isAuthenticated}>
+//             <Paper 
+//               elevation={3} 
+//               sx={{ 
+//                 p: 4, 
+//                 display: 'flex', 
+//                 flexDirection: 'column', 
+//                 alignItems: 'center',
+//                 textAlign: 'center',
+//                 borderRadius: 2,
+//                 width: '100%'
+//               }}
+//             >
+//               <CheckCircleIcon 
+//                 sx={{ 
+//                   fontSize: 60, 
+//                   color: theme.palette.success.main,
+//                   mb: 2
+//                 }}
+//               />
+//               <Typography variant="h5" component="h2" gutterBottom>
+//                 {t('login.success.title')}
+//               </Typography>
+//               <Typography variant="body1" sx={{ mb: 3 }}>
+//                 {t('login.success.message')}
+//               </Typography>
+//               <Button 
+//                 variant="contained" 
+//                 href="/dashboard"
+//                 sx={{ borderRadius: 28, px: 4 }}
+//               >
+//                 {t('login.success.goToDashboard')}
+//               </Button>
+//             </Paper>
+//           </Fade>
+//         </Box>
+//       </Container>
+//     );
+//   }
 
   return (
     <Container maxWidth="sm">

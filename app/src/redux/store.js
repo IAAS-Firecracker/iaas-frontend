@@ -13,7 +13,7 @@ import vmHostReducer from './slices/vmHostSlice';
 
 // Configure persist for user slice
 const userPersistConfig = {
-  key: 'user',
+  key: 'iaas-user',
   storage,
   whitelist: ['currentUser', 'token', 'user', 'isAuthenticated'] // persist current user data
 };
@@ -34,7 +34,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-        ignoredPaths: ['auth', 'user'] // Ignore these paths for serializable check
+        ignoredPaths: ['auth', 'iaas-user'] // Ignore these paths for serializable check
       },
     }),
   devTools: process.env.NODE_ENV !== 'production' // Enable devtools in development

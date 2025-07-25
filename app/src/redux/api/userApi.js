@@ -18,10 +18,10 @@ const userApi = {
   /**
    * Register a new user
    * @param {Object} userData - User registration data
-   * @param {string} userData.name - Username
+   * @param {string} userData.username - Username
    * @param {string} userData.email - Email
    * @param {string} userData.password - Password
-   * @param {string} userData.confirmPassword - Confirm Password
+   * @param {string} userData.confirm_password - Confirm Password
    * @returns {Promise} - The API response
    */
   register: (userData) => {
@@ -31,13 +31,14 @@ const userApi = {
   /**
    * Create admin user
    * @param {Object} userData - Admin registration data
-   * @param {string} userData.name - Username
+   * @param {string} userData.username - Username
    * @param {string} userData.email - Email
    * @param {string} userData.password - Password
    * @param {string} userData.confirm_password - Confirm Password
    * @returns {Promise} - The API response
    */
   createAdmin: (userData) => {
+    console.log("user data : ",userData);
     return apiClient.post(`/${SERVICE_NAME}/admins/`, userData);
   },
 
@@ -46,7 +47,7 @@ const userApi = {
    * @returns {Promise} - The API response
    */
   getUsers: () => {
-    return apiClient.get(`/${SERVICE_NAME}/users/`);
+    return apiClient.get(`/${SERVICE_NAME}/users`);
   },
 
   /**
@@ -71,10 +72,10 @@ const userApi = {
    * Update user
    * @param {string|number} userId - User ID
    * @param {Object} data - User data
-   * @param {string} data.name - Username
+   * @param {string} data.username - Username
    * @param {string} data.email - Email
    * @param {string} data.role - Role
-   * @param {string} data.status - Status
+   * @param {boolean} data.is_active - Status
    * @returns {Promise} - The API response
    */
   updateUser: (userId, data) => {
@@ -94,7 +95,7 @@ const userApi = {
    * Update profile
    * @param {number} id - User id
    * @param {Object} data - Profile data
-   * @param {string} data.name - Username
+   * @param {string} data.username - Username
    * @param {string} data.email - Email
    * @returns {Promise} - The API response
    */
@@ -114,11 +115,13 @@ const userApi = {
   /**
    * Change user password
    * @param {Object} data - Password data
+   * @param {number} user_id - User id
    * @param {string} data.password - Current password
-   * @param {string} data.newPassword - New password
+   * @param {string} data.new_password - New password
    * @returns {Promise} - The API response
    */
   changeUserPassword: (data) => {
+    console.log(data)
     return apiClient.patch(`/${SERVICE_NAME}/users/change-password/`, data);
   },
 
@@ -148,7 +151,7 @@ const userApi = {
    * @param {Object} data - Password reset data
    * @param {string} data.email - Email address
    * @param {string} data.code - Verification code
-   * @param {string} data.newPassword - New password
+   * @param {string} data.new_password - New password
    * @returns {Promise} - The API response
    */
   resetUserPassword: (data) => {

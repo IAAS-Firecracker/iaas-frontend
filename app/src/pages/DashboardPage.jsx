@@ -66,6 +66,8 @@ const DashboardPage = () => {
     // ... other admin stats
   ];
 
+  console.log(isAdmin);
+
   return (
     <Container maxWidth={'lg'} sx={{ py: 3, px: { xs: 2, md: 3 } }}>
       <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 2 }}>

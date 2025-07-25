@@ -65,7 +65,7 @@ const UserManagementPage = () => {
     createAdmin,
     updateUser,
     deleteUser,
-    resetPassword: resetUserPassword,
+    changePassword,
     error,
     success,
     isLoading,
@@ -80,7 +80,7 @@ const UserManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
-
+  const [selectedUserData, setSelectedUserData] = useState(null);
   // Dialog states
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -90,12 +90,11 @@ const UserManagementPage = () => {
 
   // Form states
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    role: 'USER',
-    isActive: true
+    confirm_password: '',
+    is_active: false
   });
   const [formErrors, setFormErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -134,19 +133,25 @@ const UserManagementPage = () => {
 
   const handleAction = (action) => {
     const user = users.find(u => u.id === selectedUser);
+    
     if (!user) {
       showSnackbar(t('userManagement.messages.error.fetchUsers'), 'error');
       return;
     }
+    
 
+
+    setSelectedUser(user.id);
     setFormData({
-      name: user.name || '',
+      username: user.username || '',
       email: user.email || '',
       password: '',
-      confirmPassword: '',
-      role: user.role || 'USER',
-      isActive: user.isActive
+      confirm_password: '',
+      is_active: false
+
     });
+    setSelectedUserData(user);
+    console.log("Selected User for actions : ",user);
 
     switch (action) {
       case 'view':
@@ -191,11 +196,12 @@ const UserManagementPage = () => {
       });
     }
   };
+  
 
   const validateForm = () => {
     const errors = {};
 
-    if (!formData.name.trim()) {
+    if (!formData.username.trim()) {
       errors.name = t('common.errors.required');
     }
 
@@ -211,24 +217,42 @@ const UserManagementPage = () => {
       errors.password = 'Password must be at least 8 characters';
     }
 
-    if ((createDialogOpen || resetPasswordDialogOpen) && formData.password !== formData.confirmPassword) {
+    if ((createDialogOpen || resetPasswordDialogOpen) && formData.password !== formData.confirm_password) {
       errors.confirmPassword = t('common.errors.passwordMismatch');
     }
 
+    console.log("Errors in form !!!",errors);
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
+
+
+  const validatePassword = () => {
+        const errors = {};
+
+    if (formData.password && formData.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters';
+    }
+
+    if ((createDialogOpen || resetPasswordDialogOpen) && formData.password !== formData.confirm_password) {
+      errors.confirmPassword = t('common.errors.passwordMismatch');
+    }
+
+    console.log("Errors in form !!!",errors);
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  }
 
   // API handlers
   const handleCreateUser = async () => {
     if (!validateForm()) return;
 
     const result = await createAdmin({
-      name: formData.name,
+      username: formData.username,
       email: formData.email,
       password: formData.password,
-      role: formData.role,
-      isActive: formData.isActive
+      confirm_password: formData.confirm_password,
+
     });
 
     if (result.success) {
@@ -238,13 +262,14 @@ const UserManagementPage = () => {
   };
 
   const handleEditUser = async () => {
-    if (!validateForm() || !selectedUser) return;
+    console.log("selected user ",selectedUserData);
+    if (!validateForm() || !selectedUserData) return;
 
-    const result = await updateUser(selectedUser, {
-      name: formData.name,
+    const result = await updateUser(selectedUserData.id, {
+      username: formData.username,
       email: formData.email,
       role: formData.role,
-      isActive: formData.isActive
+      is_active: formData.is_active
     });
 
     if (result.success) {
@@ -254,19 +279,22 @@ const UserManagementPage = () => {
   };
 
   const handleResetPassword = async () => {
-    if (!validateForm() || !selectedUser) return;
+    
+    console.log("selected user reset password ",selectedUserData);
+    if (!validatePassword() && !selectedUserData) return;
 
-    const result = await resetUserPassword(selectedUser, formData.password);
+    const result = await changePassword({user_id: selectedUserData.id , new_password: formData.confirm_password});
 
     if (result.success) {
       setResetPasswordDialogOpen(false);
+      fetchUsers();
     }
   };
 
   const handleDeleteUser = async () => {
-    if (!selectedUser) return;
-
-    const result = await deleteUser(selectedUser);
+    if (!selectedUserData) return;
+ console.log("selected user ",selectedUserData);
+    const result = await deleteUser(selectedUserData.id);
 
     if (result.success) {
       setDeleteDialogOpen(false);
@@ -282,6 +310,7 @@ const UserManagementPage = () => {
   });
 
   const showSnackbar = (message, severity = 'success') => {
+    console.log("Snackbar message : ",message);
     setSnackbar({
       open: true,
       message,
@@ -298,19 +327,20 @@ const UserManagementPage = () => {
 
   // Filter users
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const matchesSearch = user.username?.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          user.email?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
     const matchesStatus = statusFilter === 'all' || 
-                         (statusFilter === 'active' ? user.isActive : !user.isActive);
+                         (statusFilter === 'active' ? user.is_active : !user.is_active);
     
     return matchesSearch && matchesRole && matchesStatus;
   });
 
-  // Get selected user data
-  const selectedUserData = users.find(user => user.id === selectedUser);
 
+  // Get selected user data
+ 
+  console.log("page loading : ",isLoading);
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Page Header */}
@@ -333,12 +363,12 @@ const UserManagementPage = () => {
             startIcon={<PersonAddIcon />}
             onClick={() => {
               setFormData({
-                name: '',
+                username: '',
                 email: '',
                 password: '',
-                confirmPassword: '',
+                confirm_password: '',
                 role: 'USER',
-                isActive: true
+                is_active: true
               });
               setFormErrors({});
               setCreateDialogOpen(true);
@@ -487,10 +517,10 @@ const UserManagementPage = () => {
                 <TableRow key={user.id} hover>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
-                        {user.name?.charAt(0)?.toUpperCase()}
+                      <Avatar sx={{ bgcolor: theme.palette.primary.light }}>
+                        {user.username?.charAt(0)?.toUpperCase()}
                       </Avatar>
-                      <Typography>{user.name}</Typography>
+                      <Typography>{user.username}</Typography>
                     </Box>
                   </TableCell>
                   <TableCell>{user.email}</TableCell>
@@ -503,8 +533,8 @@ const UserManagementPage = () => {
                   </TableCell>
                   <TableCell>
                     <Chip
-                      label={user.isActive ? t('userManagement.filters.status.active') : t('userManagement.filters.status.inactive')}
-                      color={user.isActive ? 'success' : 'error'}
+                      label={user.is_active ? t('userManagement.filters.status.active') : t('userManagement.filters.status.inactive')}
+                      color={user.is_active ? 'success' : 'error'}
                       variant="outlined"
                     />
                   </TableCell>
@@ -615,9 +645,9 @@ const UserManagementPage = () => {
 
             <Grid item xs={12}>
               <TextField
-                name="name"
+                name="username"
                 label={t('userManagement.table.headers.name')}
-                value={formData.name}
+                value={formData.username}
                 onChange={handleInputChange}
                 fullWidth
                 required
@@ -665,10 +695,10 @@ const UserManagementPage = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                name="confirmPassword"
+                name="confirm_password"
                 label={t('resetPassword.fields.confirmPassword')}
                 type={showPassword ? 'text' : 'password'}
-                value={formData.confirmPassword}
+                value={formData.confirm_password}
                 onChange={handleInputChange}
                 fullWidth
                 required
@@ -680,9 +710,9 @@ const UserManagementPage = () => {
               <FormControl fullWidth>
                 <InputLabel>{t('userManagement.dialogs.createUser.accountStatus')}</InputLabel>
                 <Select
-                  name="isActive"
-                  value={formData.isActive}
-                  onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'true' })}
+                  name="is_active"
+                  value={formData.is_active}
+                  onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
                   label={t('userManagement.dialogs.createUser.accountStatus')}
                 >
                   <MenuItem value={true}>{t('userManagement.filters.status.active')}</MenuItem>
@@ -729,9 +759,9 @@ const UserManagementPage = () => {
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12}>
               <TextField
-                name="name"
+                name="username"
                 label={t('userManagement.table.headers.name')}
-                value={formData.name}
+                value={formData.username}
                 onChange={handleInputChange}
                 fullWidth
                 required
@@ -770,13 +800,13 @@ const UserManagementPage = () => {
               <FormControl fullWidth>
                 <InputLabel>{t('userManagement.table.headers.status')}</InputLabel>
                 <Select
-                  name="isActive"
-                  value={formData.isActive}
-                  onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'true' })}
+                  name="is_active"
+                  value={`${formData.is_active}`}
+                  onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
                   label={t('userManagement.table.headers.status')}
                 >
-                  <MenuItem value={true}>{t('userManagement.filters.status.active')}</MenuItem>
-                  <MenuItem value={false}>{t('userManagement.filters.status.inactive')}</MenuItem>
+                  <MenuItem value={'true'}>{t('userManagement.filters.status.active')}</MenuItem>
+                  <MenuItem value={'false'}>{t('userManagement.filters.status.inactive')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -845,10 +875,10 @@ const UserManagementPage = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                name="confirmPassword"
+                name="confirm_password"
                 label={t('resetPassword.fields.confirmPassword')}
                 type={showPassword ? 'text' : 'password'}
-                value={formData.confirmPassword}
+                value={formData.confirm_password}
                 onChange={handleInputChange}
                 fullWidth
                 required
@@ -919,114 +949,125 @@ const UserManagementPage = () => {
       </Dialog>
 
       {/* View User Dialog */}
-      <Dialog
-        open={viewDialogOpen}
-        onClose={() => setViewDialogOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>{t('userManagement.dialogs.viewUser.title')}</DialogTitle>
-        <DialogContent>
-          {selectedUserData && (
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={4}>
-                <Typography variant="body2" color="text.secondary">
-                  {t('userManagement.dialogs.viewUser.userId')}
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body1">{selectedUserData.id}</Typography>
-              </Grid>
+ <Dialog
+  open={viewDialogOpen}
+  onClose={() => setViewDialogOpen(false)}
+  maxWidth="sm"
+  fullWidth
+>
+  <DialogTitle>{t('userManagement.dialogs.viewUser.title')}</DialogTitle>
+  <DialogContent>
+    {selectedUserData && (
+      <Grid container spacing={3} sx={{ mt: 1 }}>
+        {/* User ID */}
+        <Grid item xs={12} container alignItems="center">
+          <Grid item xs={3}>
+            <Typography variant="subtitle2">{t('userManagement.dialogs.viewUser.userId')}:</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography>{selectedUserData.id}</Typography>
+          </Grid>
+        </Grid>
 
-              <Grid item xs={4}>
-                <Typography variant="body2" color="text.secondary">
-                  {t('userManagement.table.headers.name')}
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body1">{selectedUserData.name}</Typography>
-              </Grid>
+        {/* Name */}
+        <Grid item xs={12} container alignItems="center">
+          <Grid item xs={3}>
+            <Typography variant="subtitle2">{t('userManagement.table.headers.name')}:</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography>{selectedUserData.username}</Typography>
+          </Grid>
+        </Grid>
 
-              <Grid item xs={4}>
-                <Typography variant="body2" color="text.secondary">
-                  {t('userManagement.table.headers.email')}
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body1">{selectedUserData.email}</Typography>
-              </Grid>
+        {/* Email */}
+        <Grid item xs={12} container alignItems="center">
+          <Grid item xs={3}>
+            <Typography variant="subtitle2">{t('userManagement.table.headers.email')}:</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography>{selectedUserData.email}</Typography>
+          </Grid>
+        </Grid>
 
-              <Grid item xs={4}>
-                <Typography variant="body2" color="text.secondary">
-                  {t('userManagement.table.headers.role')}
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Chip
-                  label={selectedUserData.role}
-                  color={selectedUserData.role === 'ADMIN' ? 'primary' : 'default'}
-                  variant={selectedUserData.role === 'ADMIN' ? 'filled' : 'outlined'}
-                />
-              </Grid>
+        {/* Role */}
+        <Grid item xs={12} container alignItems="center">
+          <Grid item xs={3}>
+            <Typography variant="subtitle2">{t('userManagement.table.headers.role')}:</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Chip
+              label={selectedUserData.role}
+              color={selectedUserData.role === 'ADMIN' ? 'primary' : 'default'}
+              sx={{ borderRadius: 1 }}
+            />
+          </Grid>
+        </Grid>
 
-              <Grid item xs={4}>
-                <Typography variant="body2" color="text.secondary">
-                  {t('userManagement.table.headers.status')}
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Chip
-                  label={selectedUserData.isActive ? t('userManagement.filters.status.active') : t('userManagement.filters.status.inactive')}
-                  color={selectedUserData.isActive ? 'success' : 'error'}
-                  variant="outlined"
-                />
-              </Grid>
+        {/* Status */}
+        <Grid item xs={12} container alignItems="center">
+          <Grid item xs={3}>
+            <Typography variant="subtitle2">{t('userManagement.table.headers.status')}:</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Chip
+              label={selectedUserData.is_active ? t('userManagement.filters.status.active') : t('userManagement.filters.status.inactive')}
+              color={selectedUserData.is_active ? 'success' : 'error'}
+              variant="outlined"
+              sx={{ borderRadius: 1 }}
+            />
+          </Grid>
+        </Grid>
 
-              <Grid item xs={4}>
-                <Typography variant="body2" color="text.secondary">
-                  {t('userManagement.dialogs.viewUser.createdAt')}
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body1">
-                  {selectedUserData.createdAt ? format(new Date(selectedUserData.createdAt), 'PPpp') : 'N/A'}
-                </Typography>
-              </Grid>
+        {/* Created At */}
+        <Grid item xs={12} container alignItems="center">
+          <Grid item xs={3}>
+            <Typography variant="subtitle2">{t('userManagement.dialogs.viewUser.createdAt')}:</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography>
+              {selectedUserData.date_joined ? format(new Date(selectedUserData.date_joined), 'PPpp') : 'N/A'}
+            </Typography>
+          </Grid>
+        </Grid>
 
-              <Grid item xs={4}>
-                <Typography variant="body2" color="text.secondary">
-                  {t('userManagement.dialogs.viewUser.lastUpdated')}
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body1">
-                  {selectedUserData.updatedAt ? format(new Date(selectedUserData.updatedAt), 'PPpp') : 'N/A'}
-                </Typography>
-              </Grid>
-            </Grid>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setViewDialogOpen(false)}>
-            {t('userManagement.dialogs.viewUser.close')}
-          </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => {
-              setViewDialogOpen(false);
-              handleAction('edit');
-            }}
-          >
-            {t('userManagement.buttons.edit')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {/* Last Updated */}
+        <Grid item xs={12} container alignItems="center">
+          <Grid item xs={3}>
+            <Typography variant="subtitle2">{t('userManagement.dialogs.viewUser.lastUpdated')}:</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography>
+              {selectedUserData.date_joined ? format(new Date(selectedUserData.date_joined), 'PPpp') : 'N/A'}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    )}
+  </DialogContent>
+  <DialogActions sx={{ p: 3 }}>
+    <Button 
+      onClick={() => setViewDialogOpen(false)}
+      sx={{ minWidth: 100 }}
+    >
+      {t('userManagement.dialogs.viewUser.close')}
+    </Button>
+    <Button
+      variant="contained"
+      onClick={() => {
+        setViewDialogOpen(false);
+        handleAction('edit');
+      }}
+      sx={{ minWidth: 100 }}
+    >
+      {t('userManagement.buttons.edit')}
+    </Button>
+  </DialogActions>
+</Dialog>
 
       {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={6000}
+        autoHideDuration={2000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
@@ -1036,7 +1077,9 @@ const UserManagementPage = () => {
           variant="filled"
           sx={{ width: '100%' }}
         >
-          {snackbar.message}
+            {console.log(snackbar.message)
+            }
+          {snackbar.message == true ? "Success !!!" : snackbar.message.error || snackbar.message.message}
         </Alert>
       </Snackbar>
     </Container>

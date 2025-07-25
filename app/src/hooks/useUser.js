@@ -19,7 +19,7 @@ import {
   resetPassword,
   refreshAuthToken,
   logout,
-  selectCurrentUser,
+  selectUser,
   selectUsers,
   selectSelectedUser,
   selectIsAuthenticated,
@@ -38,7 +38,7 @@ const useUser = () => {
   const navigate = useNavigate();
 
   // Selectors
-  const currentUser = useSelector(selectCurrentUser);
+  const user = useSelector(selectUser);
   const users = useSelector(selectUsers);
   const selectedUser = useSelector(selectSelectedUser);
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -52,7 +52,7 @@ const useUser = () => {
   const login = useCallback(async (credentials) => {
     try {
       const result = await dispatch(loginUser(credentials)).unwrap();
-      navigate('/dashboard'); // Or based on user role
+     navigate('/dashboard'); // Or based on user role
       return { success: true, data: result };
     } catch (err) {
       return { success: false, error: err.message || 'Login failed' };
@@ -103,7 +103,7 @@ const useUser = () => {
     }
   }, [dispatch]);
 
-  const getCurrentUser = useCallback(async (userId) => {
+  const getuser = useCallback(async (userId) => {
     try {
       await dispatch(fetchLoggedInUser(userId)).unwrap();
       return { success: true };
@@ -117,6 +117,7 @@ const useUser = () => {
       const result = await dispatch(createAdminUser(adminData)).unwrap();
       return { success: true, data: result };
     } catch (err) {
+        console.log("error while creating admin : ",err.message)
       return { success: false, error: err.message || 'Failed to create admin' };
     }
   }, [dispatch]);
@@ -187,9 +188,9 @@ const useUser = () => {
     }
   }, [dispatch]);
 
-  const resetUserPassword = useCallback(async (email, code, newPassword) => {
+  const resetUserPassword = useCallback(async (email, code, new_password) => {
     try {
-      await dispatch(resetPassword({ email, code, newPassword })).unwrap();
+      await dispatch(resetPassword({ email, code, new_password })).unwrap();
       return { success: true };
     } catch (err) {
       return { success: false, error: err.message || 'Failed to reset password' };
@@ -198,9 +199,9 @@ const useUser = () => {
 
   // Helper functions
   const hasRole = useCallback((role) => {
-    if (!currentUser) return false;
-    return currentUser.roles?.includes(role) || currentUser.role === role;
-  }, [currentUser]);
+    if (!user) return false;
+    return  user.role === role;
+  }, [user]);
 
   const clearErrors = useCallback(() => {
     dispatch(clearUserError());
@@ -216,7 +217,7 @@ const useUser = () => {
 
   return {
     // State
-    currentUser,
+    user,
     users,
     selectedUser,
     isAuthenticated,
@@ -235,7 +236,7 @@ const useUser = () => {
     // User Management
     getUsers,
     getUserById,
-    getCurrentUser,
+    getuser,
     createAdmin,
     updateUser: update,
     deleteUser: remove,

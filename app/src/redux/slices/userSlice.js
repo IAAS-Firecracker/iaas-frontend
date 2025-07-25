@@ -1,6 +1,7 @@
 // src/redux/slices/userSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import userApi from '../api/userApi';
+import { data } from 'react-router-dom';
 
 // Async thunks for all user actions
 export const loginUser = createAsyncThunk(
@@ -8,9 +9,9 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await userApi.login(credentials);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Login failed' });
+      return rejectWithValue(error.response?.data.data || { message: 'Login failed' });
     }
   }
 );
@@ -20,9 +21,9 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await userApi.register(userData);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Registration failed' });
+      return rejectWithValue(error.response?.data.data || { message: 'Registration failed' });
     }
   }
 );
@@ -32,9 +33,9 @@ export const createAdminUser = createAsyncThunk(
   async (adminData, { rejectWithValue }) => {
     try {
       const response = await userApi.createAdmin(adminData);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Admin creation failed' });
+      return rejectWithValue(error.response?.data.data || { message: 'Admin creation failed' });
     }
   }
 );
@@ -44,9 +45,12 @@ export const fetchUsers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await userApi.getUsers();
-      return response.data;
+
+      const users =  response.data.data;
+      console.log("users : ",users);
+      return users;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to fetch users' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to fetch users' });
     }
   }
 );
@@ -56,9 +60,9 @@ export const fetchUserById = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await userApi.getUserById(id);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to fetch user' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to fetch user' });
     }
   }
 );
@@ -68,9 +72,9 @@ export const fetchLoggedInUser = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await userApi.getLoggedInUser(id);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to fetch current user' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to fetch current user' });
     }
   }
 );
@@ -80,9 +84,9 @@ export const updateUser = createAsyncThunk(
   async ({ userId, userData }, { rejectWithValue }) => {
     try {
       const response = await userApi.updateUser(userId, userData);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to update user' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to update user' });
     }
   }
 );
@@ -92,9 +96,9 @@ export const deleteUser = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await userApi.deleteUser(userId);
-      return { userId, ...response.data };
+      return { userId, ...response.data.data };
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to delete user' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to delete user' });
     }
   }
 );
@@ -104,9 +108,9 @@ export const updateUserProfile = createAsyncThunk(
   async ({ id, profileData }, { rejectWithValue }) => {
     try {
       const response = await userApi.updateProfile(profileData, id);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to update profile' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to update profile' });
     }
   }
 );
@@ -116,9 +120,9 @@ export const deleteUserProfile = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await userApi.deleteProfile(id);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to delete profile' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to delete profile' });
     }
   }
 );
@@ -127,10 +131,11 @@ export const changePassword = createAsyncThunk(
   'user/changePassword',
   async (passwordData, { rejectWithValue }) => {
     try {
+        console.log("slice pass data : ",passwordData);
       const response = await userApi.changeUserPassword(passwordData);
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to change password' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to change password' });
     }
   }
 );
@@ -140,9 +145,9 @@ export const requestPasswordReset = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       const response = await userApi.sendResetCode({ email });
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to request password reset' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to request password reset' });
     }
   }
 );
@@ -152,9 +157,9 @@ export const verifyResetCode = createAsyncThunk(
   async ({ email, code }, { rejectWithValue }) => {
     try {
       const response = await userApi.verifyResetCode({ email, code });
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to verify reset code' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to verify reset code' });
     }
   }
 );
@@ -164,9 +169,9 @@ export const resetPassword = createAsyncThunk(
   async ({ email, code, newPassword }, { rejectWithValue }) => {
     try {
       const response = await userApi.resetUserPassword({ email, code, newPassword });
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to reset password' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to reset password' });
     }
   }
 );
@@ -176,30 +181,62 @@ export const refreshAuthToken = createAsyncThunk(
   async (refreshToken, { rejectWithValue }) => {
     try {
       const response = await userApi.refreshToken({ refreshToken });
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || { message: 'Failed to refresh token' });
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to refresh token' });
     }
   }
 );
 
-// Initial state
-const initialState = {
-  currentUser: null,
+
+// Helper function to get default auth state
+const getDefaultAuthState = () => ({
+  user: null,
   users: [],
   selectedUser: null,
-  isAdmin: true,
+  isAdmin: false,  // Changed from true to false as default
   token: null,
   refreshToken: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
   success: false,
+  userRole: null,
   passwordReset: {
     email: null,
     isCodeVerified: false
   }
+});
+
+// Helper function to safely parse persisted auth data
+const getInitialAuthState = () => {
+  // First try to get state from localStorage
+  try {
+    const authData = localStorage.getItem('persist:iaas-user');
+    if (!authData) return getDefaultAuthState();
+    
+    const parsed = JSON.parse(authData);
+    if (!parsed) return getDefaultAuthState();
+    
+    const token = parsed.token ? JSON.parse(parsed.token) : null;
+    const user = parsed.user ? JSON.parse(parsed.user) : null;
+    
+    return {
+      ...getDefaultAuthState(), // Start with defaults
+      user: user,
+      token: token,
+      isAuthenticated: !!token,
+      userRole: user?.role || null,
+      isAdmin: user?.role === 'admin' // Derive isAdmin from role
+    };
+  } catch (error) {
+    console.error('Error parsing persisted auth data:', error);
+    return getDefaultAuthState();
+  }
 };
+
+// Initial state - use the function that properly handles initialization
+const initialState = getInitialAuthState();
 
 // User slice
 const userSlice = createSlice({
@@ -207,7 +244,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.currentUser = null;
+      state.user = null;
       state.token = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
@@ -228,10 +265,12 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
+        console.log("login payload : ",action.payload);
         state.token = action.payload.token || action.payload.access;
-        state.refreshToken = action.payload.refreshToken || action.payload.refresh;
-        state.currentUser = action.payload.user;
+        state.refreshToken = action.payload.refresh || action.payload.refresh;
+        state.user = action.payload.user;
       })
+    
       
       // Register
       .addCase(registerUser.fulfilled, (state) => {
@@ -239,10 +278,11 @@ const userSlice = createSlice({
         state.success = true;
       })
       
+      
       // Get current user
       .addCase(fetchLoggedInUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.currentUser = action.payload;
+        state.user = action.payload;
       })
       
       // Get all users
@@ -266,8 +306,8 @@ const userSlice = createSlice({
           user.id === action.payload.id ? action.payload : user
         );
         // Update current user if it's them
-        if (state.currentUser?.id === action.payload.id) {
-          state.currentUser = action.payload;
+        if (state.user?.id === action.payload.id) {
+          state.user = action.payload;
         }
       })
       
@@ -282,7 +322,7 @@ const userSlice = createSlice({
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = true;
-        state.currentUser = { ...state.currentUser, ...action.payload };
+        state.user = { ...state.user, ...action.payload };
       })
       
       // Password reset flow
@@ -297,6 +337,8 @@ const userSlice = createSlice({
       .addCase(resetPassword.fulfilled, (state) => {
         state.isLoading = false;
         state.success = true;
+        console.log("reset fulfilled !!!");
+        
         state.passwordReset = initialState.passwordReset;
       })
       
@@ -341,7 +383,7 @@ export const {
 export default userSlice.reducer;
 
 // Selectors
-export const selectCurrentUser = (state) => state.user.currentUser;
+export const selectUser = (state) => state.user.user;
 export const selectUsers = (state) => state.user.users;
 export const selectSelectedUser = (state) => state.user.selectedUser;
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated;

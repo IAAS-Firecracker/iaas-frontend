@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
@@ -7,58 +7,39 @@ import {
     Typography,
     Button,
     IconButton,
-    Menu,
-    MenuItem,
-    Avatar,
-    InputBase,
     Box,
-    Drawer,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Divider,
     useMediaQuery,
     useTheme,
     styled,
-    CssBaseline,
-    Select,
-    FormControl,
-    alpha,
     Badge,
     Tooltip,
-    Collapse
+    Avatar,
+    Select,
+    MenuItem,
+    MenuList,
+    ListItemIcon,
+    Divider,
+    Menu,
+    alpha
+
 } from '@mui/material';
 import {
     Menu as MenuIcon,
     Search as SearchIcon,
     Notifications as NotificationsIcon,
-    AccountCircle,
-    Home as HomeIcon,
-    Dashboard as DashboardIcon,
-    Help as HelpIcon,
     VpnKey as VpnKeyIcon,
-    ExitToApp as LogoutIcon,
+    AccountCircle,
     Language as LanguageIcon,
-    Close as CloseIcon,
-    Dns as VmIcon,
-    Storage as StorageIcon,
-    ManageAccounts as ManageAccountsIcon,
-    ShoppingCart as ShoppingCartIcon,
-    People as PeopleIcon,
-    Payment as PaymentIcon,
-    ExpandLess,
-    ExpandMore,
-    AdminPanelSettings as AdminIcon,
-    Settings as SettingsIcon
+    Logout as LogoutIcon,
+    Settings as SettingsIcon,
+    Close as CloseIcon
 } from '@mui/icons-material';
-import LanIcon from '@mui/icons-material/Lan';
-import Diversity2Icon from '@mui/icons-material/Diversity2';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
-import useUser from '../../hooks/useUser';
+import Drawer from './Drawer';
+import { Search, MobileSearch, SearchIconWrapper, StyledInputBase, LanguageSelector } from './styles';
+import useUser from '../../../hooks/useUser';
 
-const drawerWidth = 260;
+ const drawerWidth = 260;
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -81,107 +62,10 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.primary.main, 0.05),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
-    width: '100%',
-    maxWidth: 500,
-    [theme.breakpoints.down('sm')]: {
-        marginLeft: 0,
-        width: '100%',
-        display: 'none'
-    },
-}));
-
-const MobileSearch = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.primary.main, 0.05),
-    margin: theme.spacing(1),
-    width: '100%',
-    display: 'none',
-    [theme.breakpoints.down('sm')]: {
-        display: 'block'
-    },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.text.secondary,
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1.5, 1, 1.5, 0),
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        width: '100%',
-    },
-}));
-
-const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: theme.spacing(0, 2),
-    ...theme.mixins.toolbar,
-}));
-
-const LanguageSelector = styled(FormControl)(({ theme }) => ({
-    minWidth: 120,
-    [theme.breakpoints.down('sm')]: {
-        minWidth: 'auto',
-        marginLeft: 0,
-    },
-    '& .MuiInputBase-root': {
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.primary.main, 0.05),
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.primary.main, 0.1),
-        },
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-        border: 'none',
-    },
-}));
-
-const SectionHeader = styled(Typography)(({ theme }) => ({
-    padding: theme.spacing(2, 2, 1, 2),
-    fontWeight: 600,
-    fontSize: '0.75rem',
-    textTransform: 'uppercase',
-    letterSpacing: '0.1em',
-    color: theme.palette.text.secondary,
-}));
-
-const AdminListItem = styled(ListItem)(({ theme }) => ({
-    borderRadius: theme.spacing(1),
-    margin: theme.spacing(0.5, 1),
-    backgroundColor: alpha(theme.palette.primary.main, 0.05),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    },
-}));
-
-const Header = () => {
+const Header = ({  }) => {
     const { t, i18n } = useTranslation();
     const auth = useUser();
-    const isAuthenticated = auth.isAuthenticated;
-    const user = auth.currentUser;
-    const isAdmin = auth.isAdmin;
-    const logout = auth.logout;
+    const { isAuthenticated, currentUser: user, isAdmin, logout } = auth;
     const navigate = useNavigate();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xl'));
@@ -191,40 +75,27 @@ const Header = () => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [showMobileSearch, setShowMobileSearch] = useState(false);
+     
+        const notificationCount = 5;
     const [anchorEl, setAnchorEl] = useState(null);
     const [notificationsAnchorEl, setNotificationsAnchorEl] = useState(null);
-    const [showMobileSearch, setShowMobileSearch] = useState(false);
-    const [adminPanelOpen, setAdminPanelOpen] = useState(false);
-
-    const notificationCount = 5;
-
-    const isMenuOpen = Boolean(anchorEl);
+  const isMenuOpen = Boolean(anchorEl);
     const isNotificationsOpen = Boolean(notificationsAnchorEl);
 
-    console.log("user is admin : ", isAdmin);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
-    const handleProfileMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleNotificationsOpen = (event) => {
-        setNotificationsAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleNotificationsClose = () => {
-        setNotificationsAnchorEl(null);
-    };
-
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
+    };
+
+    const handleLogout = () => {
+        logout();
+        handleMenuClose();
+        navigate('/login');
     };
 
     const handleSearchSubmit = (e) => {
@@ -236,277 +107,124 @@ const Header = () => {
         }
     };
 
-    const handleLogout = () => {
-        logout();
-        handleMenuClose();
-        navigate('/login');
+     const handleNotificationsOpen = (event) => {
+        setNotificationsAnchorEl(event.currentTarget);
     };
+
+       const handleProfileMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
 
     const changeLanguage = (event) => {
         i18n.changeLanguage(event.target.value);
     };
 
-    const handleAdminPanelToggle = () => {
-        setAdminPanelOpen(!adminPanelOpen);
+      const handleMenuClose = () => {
+        setAnchorEl(null);
     };
 
-    // Navigation items grouped by category
-    const mainNavItems = [
-        { name: t('navigation.home'), icon: <HomeIcon color="primary" />, route: '/' },
-        { name: t('navigation.dashboard'), icon: <DashboardIcon color="primary" />, route: '/dashboard' },
-        { name: t('navigation.billing'), icon: <PaymentIcon color="primary" />, route: '/billing' },
+    const handleNotificationsClose = () => {
+        setNotificationsAnchorEl(null);
+    };
 
-    ];
 
-    const computeStorageItems = [
-        { name: t('navigation.compute'), icon: <VmIcon color="primary" />, route: '/vms' },
-        // { name: t('navigation.storage'), icon: <StorageIcon color="primary" />, route: '/storage' },
-    ];
-
-    const supportNavItems = [
-        { name: t('navigation.settings'), icon: <SettingsIcon color="primary" />, route: '/settings' },
-        { name: t('navigation.help'), icon: <HelpIcon color="primary" />, route: '/help' },
-    ];
-
-    const adminNavItems = [
-        { name: t('navigation.users'), icon: <PeopleIcon color="primary" />, route: '/users' },
-        { name: t('navigation.vms'), icon: <VmIcon color="primary" />, route: '/vms' },
-        { name: t('navigation.clusters'), icon: <LanIcon color="primary" />, route: '/clusters' },
-        { name: t('navigation.system_images'), icon: <Diversity2Icon color="primary" />, route: '/system-images' },
-        { name: t('navigation.offers'), icon: <LocalOfferIcon color="primary" />, route: '/offers' },
-    ];
-
-    // Helper function to render navigation items
-    const renderNavItems = (items, isAdminSection = false) => (
-        items.map((item) => {
-            const ListItemComponent = isAdminSection ? AdminListItem : ListItem;
-            return (
-                <ListItemComponent
-                    key={item.name}
-                    button
-                    onClick={() => {
-                        navigate(item.route);
-                        if (isMobile) setMobileOpen(false);
-                    }}
-                    sx={!isAdminSection ? {
-                        borderRadius: 1,
-                        mx: 1,
-                        my: 0.5,
-                        '&:hover': {
-                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                        }
-                    } : {}}
-                >
-                    <ListItemIcon sx={{ minWidth: 40 }}>
-                        {item.icon}
+     // Profile menu
+        const renderProfileMenu = (
+            <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+                PaperProps={{
+                    elevation: 3,
+                    sx: {
+                        minWidth: 200,
+                        borderRadius: 2,
+                        mt: 1,
+                    }
+                }}
+            >
+                <MenuItem onClick={() => { handleMenuClose(); navigate('/profile'); }}>
+                    <ListItemIcon>
+                        <AccountCircle fontSize="small" color="primary" />
                     </ListItemIcon>
-                    <ListItemText
-                        primary={item.name}
-                        primaryTypographyProps={{ 
-                            fontWeight: isAdminSection ? 600 : 500,
-                            fontSize: isAdminSection ? '0.9rem' : 'inherit'
-                        }}
-                    />
-                </ListItemComponent>
-            );
-        })
-    );
-
-    // Profile menu
-    const renderProfileMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-            PaperProps={{
-                elevation: 3,
-                sx: {
-                    minWidth: 200,
-                    borderRadius: 2,
-                    mt: 1,
-                }
-            }}
-        >
-            <MenuItem onClick={() => { handleMenuClose(); navigate('/profile'); }}>
-                <ListItemIcon>
-                    <AccountCircle fontSize="small" color="primary" />
-                </ListItemIcon>
-                {t('navigation.profile')}
-            </MenuItem>
-            <MenuItem onClick={() => { handleMenuClose(); navigate('/settings'); }}>
-                <ListItemIcon>
-                    <SettingsIcon fontSize="small" color="primary" />
-                </ListItemIcon>
-                {t('navigation.settings')}
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={handleLogout}>
-                <ListItemIcon>
-                    <LogoutIcon fontSize="small" color="primary" />
-                </ListItemIcon>
-                {t('navigation.logout')}
-            </MenuItem>
-        </Menu>
-    );
-
-    // Notifications menu
-    const renderNotificationsMenu = (
-        <Menu
-            anchorEl={notificationsAnchorEl}
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isNotificationsOpen}
-            onClose={handleNotificationsClose}
-            PaperProps={{
-                elevation: 3,
-                sx: {
-                    width: isSmallScreen ? '100vw' : 350,
-                    maxHeight: 400,
-                    borderRadius: isSmallScreen ? 0 : 2,
-                    mt: 1,
-                    p: 1,
-                }
-            }}
-        >
-            <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="subtitle1" fontWeight={600}>
-                    {t('notifications')}
-                </Typography>
-                <Button
-                    size="small"
-                    color="primary"
-                    onClick={() => { handleNotificationsClose(); navigate('/notifications'); }}
-                >
-                    {t('viewAll')}
-                </Button>
-            </Box>
-            <Divider />
-            <Box sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="body2" color="text.secondary">
-                    {t('noNewNotifications')}
-                </Typography>
-            </Box>
-        </Menu>
-    );
-
-    // Navigation drawer
-    const renderDrawer = (
-        <Drawer
-            variant={isMobile ? 'temporary' : 'persistent'}
-            open={isMobile ? mobileOpen : (isAuthenticated && !isLanding)}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-                keepMounted: true,
-            }}
-            sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
-                    width: drawerWidth,
-                    boxSizing: 'border-box',
-                    borderRight: 'none',
-                    boxShadow: theme.shadows[2],
-                },
-            }}
-        >
-            <DrawerHeader>
-                {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Avatar
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            mr: 2,
-                            bgcolor: theme.palette.primary.main,
-                            color: theme.palette.primary.contrastText
-                        }}
+                    {t('navigation.profile')}
+                </MenuItem>
+                <MenuItem onClick={() => { handleMenuClose(); navigate('/settings'); }}>
+                    <ListItemIcon>
+                        <SettingsIcon fontSize="small" color="primary" />
+                    </ListItemIcon>
+                    {t('navigation.settings')}
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleLogout}>
+                    <ListItemIcon>
+                        <LogoutIcon fontSize="small" color="primary" />
+                    </ListItemIcon>
+                    {t('navigation.logout')}
+                </MenuItem>
+            </Menu>
+        );
+    
+        // Notifications menu
+        const renderNotificationsMenu = (
+            <Menu
+                anchorEl={notificationsAnchorEl}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={isNotificationsOpen}
+                onClose={handleNotificationsClose}
+                PaperProps={{
+                    elevation: 3,
+                    sx: {
+                        width: isSmallScreen ? '100vw' : 350,
+                        maxHeight: 400,
+                        borderRadius: isSmallScreen ? 0 : 2,
+                        mt: 1,
+                        p: 1,
+                    }
+                }}
+            >
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="subtitle1" fontWeight={600}>
+                        {t('notifications')}
+                    </Typography>
+                    <Button
+                        size="small"
+                        color="primary"
+                        onClick={() => { handleNotificationsClose(); navigate('/notifications'); }}
                     >
-                        {t('appName').charAt(0)}
-                    </Avatar>
-                </Box> */}
-                {isMobile && (
-                    <IconButton onClick={handleDrawerToggle}>
-                        <CloseIcon />
-                    </IconButton>
-                )}
-            </DrawerHeader>
-            <Divider />
-
-            {/* Main Navigation */}
-            <SectionHeader>{t('navigation.main')}</SectionHeader>
-            <List sx={{ pt: 0 }}>
-                {renderNavItems(mainNavItems)}
-            </List>
-
-            {/* Compute & Storage */}
-            <SectionHeader>{t('navigation.computeStorage')}</SectionHeader>
-            <List sx={{ pt: 0 }}>
-                {renderNavItems(computeStorageItems)}
-            </List>
-
-            {/* Admin Panel - Only show if user is admin */}
-            {isAdmin && (
-                <>
-                    <Divider sx={{ my: 1 }} />
-                    <ListItem
-                        button
-                        onClick={handleAdminPanelToggle}
-                        sx={{
-                            borderRadius: 1,
-                            mx: 1,
-                            my: 0.5,
-                            //backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                            // border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                            '&:hover': {
-                                backgroundColor: alpha(theme.palette.primary.main, 0.15),
-                            }
-                        }}
-                    >
-                        <ListItemIcon sx={{ minWidth: 40 }}>
-                            <AdminIcon  />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={t('navigation.adminPanel')}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        />
-                        {adminPanelOpen ? <ExpandLess  /> : <ExpandMore  />}
-                    </ListItem>
-                    <Collapse in={adminPanelOpen} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding sx={{ pl: 1 }}>
-                            {renderNavItems(adminNavItems, true)}
-                        </List>
-                    </Collapse>
-                </>
-            )}
-
-            {/* Support Section */}
-            <Box sx={{ mt: 'auto' }}>
-                <Divider sx={{ my: 1 }} />
-                <SectionHeader>{t('navigation.support')}</SectionHeader>
-                <List>
-                    {renderNavItems(supportNavItems)}
-                </List>
-            </Box>
-        </Drawer>
-    );
+                        {t('viewAll')}
+                    </Button>
+                </Box>
+                <Divider />
+                <Box sx={{ p: 2, textAlign: 'center' }}>
+                    <Typography variant="body2" color="text.secondary">
+                        {t('noNewNotifications')}
+                    </Typography>
+                </Box>
+            </Menu>
+        );
+    
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex' , mb: 5 }}>
             <AppBar position="fixed" open={isAuthenticated && !isMobile && !isLanding}>
                 <Toolbar>
                     {isAuthenticated && (
@@ -646,8 +364,7 @@ const Header = () => {
                                         </MenuItem>
                                     </Select>
                                 </LanguageSelector>
-
-                                <Tooltip title={t('notifications')}>
+   <Tooltip title={t('notifications')}>
                                     <IconButton
                                         size="medium"
                                         color="inherit"
@@ -803,25 +520,18 @@ const Header = () => {
                     )}
                 </Toolbar>
             </AppBar>
-            {isAuthenticated && renderDrawer}
-            {renderProfileMenu}
-            {renderNotificationsMenu}
-            <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    p: 1,
-                    mb: 4,
-                    width: isAuthenticated && !isLanding ? `calc(100% - ${drawerWidth}px)` : '100%',
-                    marginLeft: isAuthenticated && !isLanding ? `${drawerWidth}px` : 0,
-                    transition: theme.transitions.create(['margin', 'width'], {
-                        easing: theme.transitions.easing.sharp,
-                        duration: theme.transitions.duration.leavingScreen,
-                    }),
-                }}
-            >
-
-            </Box>
+            
+            {isAuthenticated && (
+                <Drawer 
+                    open={mobileOpen} 
+                    onClose={handleDrawerToggle}
+                    isMobile={isMobile}
+                    isAdmin={isAdmin}
+                    user={user}
+                />
+            )}
+             {renderNotificationsMenu}
+             {renderProfileMenu}
         </Box>
     );
 };
