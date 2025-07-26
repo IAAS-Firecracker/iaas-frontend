@@ -1,41 +1,26 @@
-# Step 1: Build the React app
-FROM node:18 AS build
+# Utiliser une version stable de Node.js
+FROM node:14-alpine
 
-# Set the working directory
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copy the package.json and package-lock.json (if it exists)
+# Copier uniquement les fichiers nécessaires
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --force
-RUN npm install @mui/material @mui/utils @mui/system @mui/icons-material --force
+# Installer les dépendances
+RUN npm install --production
 
-# Copy the entire project to the container
+# Copier les fichiers source de l'application
 COPY . .
 
-# Build the React app for production
+# Construire l'application pour la production
 RUN npm run build
 
-# Step 2: Serve the React app with Nginx
-FROM nginx:alpine
+# Installer "serve" globalement pour servir l'application
+RUN npm install -g serve
 
-# Copy the build folder from the build stage to the Nginx container
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Create nginx configuration for SPA
-RUN echo 'server { \
-    listen 80; \
-    server_name localhost; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    location / { \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
-
-# Expose the port on which the app will run
+# Exposer le port sur lequel l'application sera disponible
 EXPOSE 80
 
-# Start Nginx to serve the React app
-CMD ["nginx", "-g", "daemon off;"]
+# Démarrer l'application avec "serve"
+CMD ["serve", "-s", "build", "-l", "80"]

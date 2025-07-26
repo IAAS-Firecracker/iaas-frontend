@@ -1,15 +1,16 @@
+version: '3.8'
+
 services:
- 
   iaas-frontend:
-    restart: "on-failure"
-    container_name: iaas-frontend
     build: .
-    ports: 
+    image: iaas-frontend 
+    ports:
       - "3001:80"
-    environment:
-      - NODE_ENV=production
+    restart: always
     networks:
       - iaas-firecracker-network
+    environment:
+      - NODE_ENV=production
 
 networks:
   iaas-firecracker-network:
