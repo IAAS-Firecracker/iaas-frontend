@@ -1,13 +1,19 @@
 services:
  
-  frontend:
+  iaas-frontend:
     restart: "on-failure"
+    container_name: iaas-frontend
     build: .
     ports: 
       - "3001:80"
     environment:
       - NODE_ENV=production
-    
+    networks:
+      - iaas-firecracker-network
 
+networks:
+  iaas-firecracker-network:
+    external: true
+    name: service-config_iaas-firecracker-network
 
     
