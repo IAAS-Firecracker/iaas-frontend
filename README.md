@@ -1,76 +1,117 @@
-# Getting Started with Create React App
+# IaaS Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Interface utilisateur moderne pour la plateforme IaaS Firecracker, offrant une gestion complète des machines virtuelles, clusters et ressources cloud.
 
-## Available Scripts
+## 🚀 Fonctionnalités
 
-In the project directory, you can run:
+- **Authentification sécurisée** avec JWT
+- **Gestion des utilisateurs** avec rôles et permissions
+- **Dashboard** avec aperçu des ressources
+- **Gestion des VMs**
+  - Création, démarrage, arrêt des machines virtuelles
+  - Visualisation des ressources consommées
+  - Accès SSH direct
+- **Gestion des clusters**
+  - Création et configuration de clusters
+  - Monitoring des performances
+- **Catalogue d'images système**
+  - Téléchargement et gestion d'images
+  - Configuration des offres VM
 
-### `npm start`
+## 🛠 Prérequis
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Node.js 16+ et npm 8+
+- Service-proxy en cours d'exécution (port 8079)
+- Accès aux microservices backend
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Installation
 
-### `npm test`
+1. Cloner le dépôt
+   ```bash
+   git clone [URL_DU_REPO]
+   cd iaas-frontend
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Installer les dépendances
+   ```bash
+   npm install
+   ```
 
-### `npm run build`
+3. Configurer les variables d'environnement
+   ```bash
+   cp .env.example .env
+   ```
+   Puis éditer le fichier `.env` avec vos configurations
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🔧 Configuration
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Créez un fichier `.env` à la racine du projet avec les variables suivantes :
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```env
+REACT_APP_API_URL=http://localhost:8079
+REACT_APP_APP_NAME=iaas-frontend
+REACT_APP_ENV=development
+```
 
-### `npm run eject`
+## 🖥 Démarrage en développement
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+L'application sera disponible sur [http://localhost:3000](http://localhost:3000)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🏗 Structure du projet
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+iaas-frontend/
+├── public/                 # Fichiers statiques
+├── src/
+│   ├── components/        # Composants réutilisables
+│   ├── pages/             # Pages de l'application
+│   ├── services/          # Services API
+│   │   ├── user-backend.js
+│   │   ├── vm-host-backend.js
+│   │   └── ...
+│   ├── store/             # Configuration Redux
+│   ├── styles/            # Fichiers de style globaux
+│   └── App.js             # Point d'entrée de l'application
+├── .env.example           # Exemple de configuration
+└── package.json
+```
 
-## Learn More
+## 🔌 Services Intégrés
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **User Service** : Gestion des utilisateurs et authentification
+- **VM Host Service** : Gestion des machines virtuelles
+- **VM Offer Service** : Gestion des offres de VMs
+- **Cluster Service** : Gestion des clusters
+- **System Images Service** : Gestion des images système
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🧪 Tests
 
-### Code Splitting
+```bash
+# Exécuter les tests unitaires
+npm test
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# Lancer les tests avec couverture
+npm test -- --coverage
+```
 
-### Analyzing the Bundle Size
+## 🚀 Déploiement
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Pour créer une version de production :
 
-### Making a Progressive Web App
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Les fichiers de production seront générés dans le dossier `build/`.
 
-### Advanced Configuration
+## 📄 Licence
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-### Deployment
+## 📞 Support
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-
-### Run with docker
-docker compose up --build 
-
-visit : http://localhost:3001
+Pour toute question ou assistance, veuillez contacter l'équipe de développement.
