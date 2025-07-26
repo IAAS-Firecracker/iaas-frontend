@@ -74,7 +74,7 @@ const ClusterList = () => {
   // Fetch clusters on component mount and when success changes
   useEffect(() => {
     fetchClusters();
-  }, [success]);
+  }, []); // Removed success from dependencies to prevent infinite loops
 
   // Fetch all clusters
   const fetchClusters = async () => {
@@ -91,7 +91,7 @@ const ClusterList = () => {
         : value
     });
   };
-
+  
   // Open create cluster dialog
   const handleOpenCreateDialog = () => {
     setFormData({
@@ -111,32 +111,22 @@ const ClusterList = () => {
   };
 
   // Open edit cluster dialog
-  const handleOpenEditDialog = async (clusterId) => {
-    try {
-      const result = await getClusterById(clusterId);
-      if (result.success) {
-        const cluster = clusters.find(c => c.id === clusterId);
-        if (cluster) {
-          setCurrentCluster(cluster);
-          setFormData({
-            nom: cluster.nom || '',
-            adresse_mac: cluster.adresse_mac || '',
-            ip: cluster.ip || '',
-            rom: cluster.rom || 0,
-            available_rom: cluster.available_rom || 0,
-            ram: cluster.ram || 0,
-            available_ram: cluster.available_ram || 0,
-            processeur: cluster.processeur || '',
-            available_processor: cluster.available_processor || 0,
-            number_of_core: cluster.number_of_core || 0
-          });
-          setIsEditing(true);
-          setOpenDialog(true);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleOpenEditDialog = (cluster) => {
+    setCurrentCluster(cluster);
+    setFormData({
+      nom: cluster.nom || '',
+      adresse_mac: cluster.adresse_mac || '',
+      ip: cluster.ip || '',
+      rom: cluster.rom || 0,
+      available_rom: cluster.available_rom || 0,
+      ram: cluster.ram || 0,
+      available_ram: cluster.available_ram || 0,
+      processeur: cluster.processeur || '',
+      available_processor: cluster.available_processor || 0,
+      number_of_core: cluster.number_of_core || 0
+    });
+    setIsEditing(true);
+    setOpenDialog(true);
   };
 
   // Close dialog
@@ -154,18 +144,20 @@ const ClusterList = () => {
       await createCluster(formData);
     }
     handleCloseDialog();
+    fetchClusters(); // Refresh the list after operation
   };
 
   // Delete cluster
   const handleDeleteCluster = async (clusterId) => {
     if (window.confirm(t('cluster.confirmDelete'))) {
       await deleteCluster(clusterId);
+      fetchClusters(); // Refresh the list after deletion
     }
   };
 
   // Calculate resource usage percentage
   const calculateUsage = (total, available) => {
-    if (!total) return 0;
+    if (!total || isNaN(total) || isNaN(available)) return 0;
     const used = total - available;
     return Math.round((used / total) * 100);
   };
@@ -235,7 +227,9 @@ const ClusterList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {clusters.length > 0 ? (
+            {console.log("clusters : ",clusters)
+            }
+            {clusters && clusters.length > 0 ? (
               clusters.map((cluster) => {
                 const status = getClusterStatus(cluster);
                 const romUsage = calculateUsage(cluster.rom, cluster.available_rom);
@@ -324,7 +318,7 @@ const ClusterList = () => {
                       <Tooltip title={t('common.edit')}>
                         <IconButton 
                           size="small" 
-                          onClick={() => handleOpenEditDialog(cluster.id)}
+                          onClick={() => handleOpenEditDialog(cluster)}
                           color="primary"
                         >
                           <EditIcon fontSize="small" />

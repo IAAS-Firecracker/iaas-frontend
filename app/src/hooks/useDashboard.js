@@ -70,7 +70,7 @@ const useDashboard = () => {
   }, [fetchVms]);
 
   const handleCreateVm = useCallback(() => {
-    navigate('/vms/create');
+    navigate('/vms');
   }, [navigate]);
 
   const handleToggleUserFilter = useCallback((event) => {

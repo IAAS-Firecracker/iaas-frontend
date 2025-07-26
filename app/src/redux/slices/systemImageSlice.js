@@ -7,7 +7,7 @@ export const fetchSystemImages = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await systemImageApi.getSystemImages();
-      return response.data.data.system_images;
+      return response.data.data.data.system_images;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch system images');
     }
@@ -19,7 +19,7 @@ export const fetchSystemImageById = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await systemImageApi.getSystemImageById(id);
-      return response.data.data;
+      return response.data.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch system image');
     }
@@ -67,7 +67,7 @@ export const searchImages = createAsyncThunk(
   async (name, { rejectWithValue }) => {
     try {
       const response = await systemImageApi.searchSystemImages(name);
-      return response.data.system_images;
+      return response.data.data.system_images;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to search system images');
     }
@@ -79,7 +79,7 @@ export const fetchByOsType = createAsyncThunk(
   async (os_type, { rejectWithValue }) => {
     try {
       const response = await systemImageApi.getSystemImageByOsType(os_type);
-      return response.data.system_images;
+      return response.data.data.system_images;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch by OS type');
     }
@@ -125,6 +125,8 @@ const systemImageSlice = createSlice({
       .addCase(fetchSystemImages.fulfilled, (state, action) => {
         state.isLoading = false;
         state.images = action.payload;
+        console.log("system images : ",state.images);
+        
       })
       
       // Fetch single image

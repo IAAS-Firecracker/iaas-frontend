@@ -14,6 +14,7 @@ import {
   updateUserProfile,
   deleteUserProfile,
   changePassword,
+  updatePassword,
   requestPasswordReset,
   verifyResetCode,
   resetPassword,
@@ -170,6 +171,17 @@ const useUser = () => {
     }
   }, [dispatch]);
 
+
+   const updateUserPassword = useCallback(async (passwordData) => {
+    try {
+      await dispatch(updatePassword(passwordData)).unwrap();
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message || 'Failed to update password' };
+    }
+  }, [dispatch]);
+
+
   const requestResetCode = useCallback(async (email) => {
     try {
       await dispatch(requestPasswordReset(email)).unwrap();
@@ -247,6 +259,7 @@ const useUser = () => {
 
     // Password Management
     changePassword: changeUserPassword,
+    updateUserPassword,
     requestResetCode,
     verifyResetCode: verifyCode,
     resetPassword: resetUserPassword,

@@ -7,7 +7,7 @@ export const fetchVmOffers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await vmOfferApi.getVmOffers();
-      return response.data.data.vm_offers;
+      return response.data.data.data.vm_offers;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch VM offers');
     }
@@ -79,7 +79,8 @@ export const fetchActiveVmOffers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await vmOfferApi.getActiveVmOffers();
-      return response.data.data.offers;
+      console.log("Active vm offers : ",response.data.data.data);
+      return response.data.data.data.offers;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch active VM offers');
     }
@@ -128,6 +129,7 @@ const vmOfferSlice = createSlice({
       .addCase(fetchVmOffers.fulfilled, (state, action) => {
         state.isLoading = false;
         state.offers = action.payload;
+        console.log("offers = ",action.payload);
       })
       
       // Create offer

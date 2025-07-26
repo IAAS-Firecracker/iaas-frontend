@@ -66,6 +66,7 @@ const UserManagementPage = () => {
     updateUser,
     deleteUser,
     changePassword,
+    updateUserPassword,
     error,
     success,
     isLoading,
@@ -283,7 +284,7 @@ const UserManagementPage = () => {
     console.log("selected user reset password ",selectedUserData);
     if (!validatePassword() && !selectedUserData) return;
 
-    const result = await changePassword({user_id: selectedUserData.id , new_password: formData.confirm_password});
+    const result = await updateUserPassword({user_id: selectedUserData.id , new_password: formData.confirm_password});
 
     if (result.success) {
       setResetPasswordDialogOpen(false);

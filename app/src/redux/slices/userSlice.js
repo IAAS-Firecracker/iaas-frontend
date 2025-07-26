@@ -140,6 +140,19 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+export const updatePassword = createAsyncThunk(
+  'user/updatePassword',
+  async (passwordData, { rejectWithValue }) => {
+    try {
+        console.log("slice pass data : ",passwordData);
+      const response = await userApi.updateUserPassword(passwordData);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data.data || { message: 'Failed to change password' });
+    }
+  }
+);
+
 export const requestPasswordReset = createAsyncThunk(
   'user/requestReset',
   async (email, { rejectWithValue }) => {
@@ -340,6 +353,20 @@ const userSlice = createSlice({
         console.log("reset fulfilled !!!");
         
         state.passwordReset = initialState.passwordReset;
+      })
+      .addCase(updatePassword.fulfilled, (state) => {
+        state.isLoading = false;
+        state.success = true;
+        console.log("password updated !!!");
+        
+        //state.passwordReset = initialState.passwordReset;
+      })
+       .addCase(changePassword.fulfilled, (state) => {
+        state.isLoading = false;
+        state.success = true;
+        console.log("password changed successfully !!!");
+        
+        //state.passwordReset = initialState.passwordReset;
       })
       
       // Token refresh

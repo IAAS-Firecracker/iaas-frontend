@@ -22,7 +22,7 @@ const userPersistConfig = {
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   systemImages: systemImageReducer,
-  clusters: clusterReducer,
+  cluster: clusterReducer,
   vmOffers: vmOfferReducer,
   vmHost: vmHostReducer
 });

@@ -165,7 +165,10 @@ const VMOffersPage = () => {
     setSelectedOffer(offer);
 
     if (action === 'edit') {
+        console.log("edit vm offer : ",offer);
+        
       setFormData({
+
         name: offer.name,
         description: offer.description || '',
         cpu_count: offer.cpu_count,
@@ -280,9 +283,9 @@ const VMOffersPage = () => {
 
   // Filter offers based on current state
   const currentOffers = activeFilter ? activeOffers : offers;
-  const filteredOffers = currentOffers.filter(offer =>
-    offer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (offer.description && offer.description.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredOffers = currentOffers?.filter(offer =>
+    offer.name?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
+    (offer.description && offer.description?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   // Render grid view
@@ -512,7 +515,7 @@ const VMOffersPage = () => {
                     checked={activeFilter}
                     onChange={() => {
                       setActiveFilter(!activeFilter);
-                      fetchVmOffers();
+                      getActiveVmOffers();
                     }}
                   />
                 }
@@ -543,7 +546,7 @@ const VMOffersPage = () => {
 
       {/* Loading and Error States */}
       {isLoading && <LinearProgress sx={{ mb: 2 }} />}
-      {!isLoading && filteredOffers.length === 0 && (
+      {!isLoading && filteredOffers?.length === 0 && (
         <Paper sx={{ p: 4, textAlign: 'center' }}>
           <Typography variant="body1" color="text.secondary">
             {t('vmOffers.table.noOffers')}
@@ -564,7 +567,7 @@ const VMOffersPage = () => {
       )}
 
       {/* Main Content */}
-      {!isLoading && filteredOffers.length > 0 && (
+      {!isLoading && filteredOffers?.length > 0 && (
         viewMode === 'grid' ? renderGridView() : renderTableView()
       )}
 
@@ -787,10 +790,169 @@ const VMOffersPage = () => {
         fullWidth
       >
         <DialogTitle>{t('vmOffers.dialogs.edit.title')}</DialogTitle>
-        <DialogContent>
+          <DialogContent>
           <Grid container spacing={3} sx={{ mt: 1 }}>
-            {/* Same form fields as create dialog */}
-            {/* ... */}
+            <Grid item xs={12}>
+              <TextField
+                name="name"
+                label={t('vmOffers.form.labels.name')}
+                value={formData.name}
+                onChange={handleInputChange}
+                fullWidth
+                required
+                error={Boolean(formErrors.name)}
+                helperText={formErrors.name}
+                placeholder={t('vmOffers.form.placeholders.name')}
+              />
+            </Grid>
+            
+            <Grid item xs={12}>
+              <TextField
+                name="description"
+                label={t('vmOffers.form.labels.description')}
+                value={formData.description}
+                onChange={handleInputChange}
+                fullWidth
+                multiline
+                rows={3}
+                placeholder={t('vmOffers.form.placeholders.description')}
+              />
+            </Grid>
+            
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom>
+                {t('vmOffers.dialogs.create.resources')}
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+            </Grid>
+            
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="cpu_count"
+                label={t('vmOffers.form.labels.cpuCount')}
+                type="number"
+                value={formData.cpu_count}
+                onChange={handleInputChange}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <DnsIcon />
+                    </InputAdornment>
+                  ),
+                  inputProps: { min: 1 }
+                }}
+                error={Boolean(formErrors.cpu_count)}
+                helperText={formErrors.cpu_count}
+              />
+            </Grid>
+            
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="memory_size_mib"
+                label={t('vmOffers.form.labels.memorySize')}
+                type="number"
+                value={formData.memory_size_mib}
+                onChange={handleInputChange}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MemoryIcon />
+                    </InputAdornment>
+                  ),
+                  inputProps: { min: 512, step: 512 }
+                }}
+                error={Boolean(formErrors.memory_size_mib)}
+                helperText={formErrors.memory_size_mib || t('vmOffers.form.helperText.memory')}
+              />
+            </Grid>
+            
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="disk_size_gb"
+                label={t('vmOffers.form.labels.diskSize')}
+                type="number"
+                value={formData.disk_size_gb}
+                onChange={handleInputChange}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <StorageIcon />
+                    </InputAdornment>
+                  ),
+                  inputProps: { min: 1 }
+                }}
+                error={Boolean(formErrors.disk_size_gb)}
+                helperText={formErrors.disk_size_gb || t('vmOffers.form.helperText.disk')}
+              />
+            </Grid>
+            
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom>
+                {t('vmOffers.dialogs.create.pricing')}
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+            </Grid>
+            
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="price_per_hour"
+                label={t('vmOffers.form.labels.price')}
+                type="number"
+                value={formData.price_per_hour}
+                onChange={handleInputChange}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MoneyIcon />
+                    </InputAdornment>
+                  ),
+                  inputProps: { min: 0, step: 0.01 }
+                }}
+                error={Boolean(formErrors.price_per_hour)}
+                helperText={formErrors.price_per_hour}
+              />
+            </Grid>
+            
+            <Grid item xs={12} sm={6}>
+              <Paper sx={{ 
+                p: 2, 
+                height: '100%', 
+                bgcolor: 'primary.light', 
+                color: 'primary.contrastText' 
+              }}>
+                <Typography variant="subtitle1" gutterBottom>
+                  {t('vmOffers.dialogs.create.monthlyEstimate')}
+                </Typography>
+                <Typography variant="h5">
+                  {formatPrice(formData.price_per_hour * 24 * 30)}
+                </Typography>
+                <Typography variant="caption">
+                  {t('vmOffers.dialogs.create.estimateNote')}
+                </Typography>
+              </Paper>
+            </Grid>
+            
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2, bgcolor: 'background.default' }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  {t('vmOffers.dialogs.create.summary')}
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  <Chip icon={<DnsIcon />} label={`${formData.cpu_count} ${t('vmOffers.table.headers.cpu')}`} />
+                  <Chip icon={<MemoryIcon />} label={`${mibToGib(formData.memory_size_mib)} GB ${t('vmOffers.table.headers.memory')}`} />
+                  <Chip icon={<StorageIcon />} label={`${formData.disk_size_gb} GB ${t('vmOffers.table.headers.storage')}`} />
+                  <Chip icon={<MoneyIcon />} label={`${formatPrice(formData.price_per_hour)}/${t('vmOffers.form.labels.price').split('(')[1].split(')')[0]}`} />
+                </Box>
+              </Paper>
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>

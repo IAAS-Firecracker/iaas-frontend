@@ -115,16 +115,26 @@ const userApi = {
   /**
    * Change user password
    * @param {Object} data - Password data
-   * @param {number} user_id - User id
    * @param {string} data.password - Current password
    * @param {string} data.new_password - New password
    * @returns {Promise} - The API response
    */
   changeUserPassword: (data) => {
-    console.log(data)
     return apiClient.patch(`/${SERVICE_NAME}/users/change-password/`, data);
   },
 
+   /**
+   * Update current user password
+   * @param {Object} data - Password data
+   * @param {number} user_id - User id
+   * @param {string} data.password - Current password
+   * @param {string} data.new_password - New password
+   * @returns {Promise} - The API response
+   */
+  updateUserPassword: (data) => {
+    console.log(data)
+    return apiClient.patch(`/${SERVICE_NAME}/users/update-password/`, data);
+  },
   /**
    * Send password reset code
    * @param {Object} data - Email data

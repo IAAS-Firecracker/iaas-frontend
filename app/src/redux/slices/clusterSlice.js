@@ -7,7 +7,7 @@ export const checkClusterHealth = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await clusterApi.getHealthCheck();
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed health check');
     }
@@ -19,7 +19,7 @@ export const fetchClusterInfo = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await clusterApi.getInfo();
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch cluster info');
     }
@@ -31,7 +31,11 @@ export const fetchAllClusters = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await clusterApi.getClusters();
-      return response.data.data.clusters;
+      // Check different possible response structures
+      return response.data?.data?.clusters || 
+             response.data?.data?.data?.clusters || 
+             response.data?.clusters || 
+             response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch clusters');
     }
@@ -43,7 +47,7 @@ export const fetchClusterById = createAsyncThunk(
   async (cluster_id, { rejectWithValue }) => {
     try {
       const response = await clusterApi.getClusterById(cluster_id);
-      return response.data;
+      return response.data?.data || response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || `Failed to fetch cluster ${cluster_id}`);
     }
@@ -55,7 +59,11 @@ export const fetchAvailableClusters = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await clusterApi.getAvailableClusters();
-      return response.data.data.clusters;
+      // Check different possible response structures
+      return response.data?.data?.clusters || 
+             response.data?.data?.data?.clusters || 
+             response.data?.clusters || 
+             response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch available clusters');
     }
@@ -67,7 +75,7 @@ export const addCluster = createAsyncThunk(
   async (clusterData, { rejectWithValue }) => {
     try {
       const response = await clusterApi.createCluster(clusterData);
-      return response.data;
+      return response.data?.data || response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to create cluster');
     }
@@ -79,7 +87,7 @@ export const modifyCluster = createAsyncThunk(
   async ({ cluster_id, clusterData }, { rejectWithValue }) => {
     try {
       const response = await clusterApi.updateCluster(cluster_id, clusterData);
-      return response.data;
+      return response.data?.data || response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || `Failed to update cluster ${cluster_id}`);
     }
@@ -91,7 +99,7 @@ export const removeCluster = createAsyncThunk(
   async (cluster_id, { rejectWithValue }) => {
     try {
       const response = await clusterApi.deleteCluster(cluster_id);
-      return { cluster_id, ...response.data };
+      return { cluster_id, data: response.data?.data || response.data };
     } catch (error) {
       return rejectWithValue(error.response?.data || `Failed to delete cluster ${cluster_id}`);
     }
@@ -103,7 +111,7 @@ export const findHostForVM = createAsyncThunk(
   async (vmRequirements, { rejectWithValue }) => {
     try {
       const response = await clusterApi.findSuitableHost(vmRequirements);
-      return response.data;
+      return response.data.data.host || response.data.data.data.host;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to find suitable host');
     }
@@ -152,9 +160,10 @@ const clusterSlice = createSlice({
       // Fetch all clusters
       .addCase(fetchAllClusters.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.clusters = action.payload;
+        // Ensure we always set an array, even if the payload is undefined
+        state.clusters = Array.isArray(action.payload) ? action.payload : [];
+        console.log("Fetched clusters:", state.clusters);
       })
-      
       
       // Fetch cluster by ID
       .addCase(fetchClusterById.fulfilled, (state, action) => {
@@ -165,25 +174,31 @@ const clusterSlice = createSlice({
       // Fetch available clusters
       .addCase(fetchAvailableClusters.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.availableClusters = action.payload;
+        // Ensure we always set an array, even if the payload is undefined
+        state.availableClusters = Array.isArray(action.payload) ? action.payload : [];
+        console.log("Fetched available clusters:", state.availableClusters);
       })
       
       // Create cluster
       .addCase(addCluster.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = true;
-        state.clusters.unshift(action.payload);
+        if (action.payload) {
+          state.clusters.unshift(action.payload);
+        }
       })
       
       // Update cluster
       .addCase(modifyCluster.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = true;
-        state.clusters = state.clusters.map(cluster => 
-          cluster.id === action.payload.id ? action.payload : cluster
-        );
-        if (state.selectedCluster?.id === action.payload.id) {
-          state.selectedCluster = action.payload;
+        if (action.payload?.id) {
+          state.clusters = state.clusters.map(cluster => 
+            cluster.id === action.payload.id ? action.payload : cluster
+          );
+          if (state.selectedCluster?.id === action.payload.id) {
+            state.selectedCluster = action.payload;
+          }
         }
       })
       
@@ -191,9 +206,13 @@ const clusterSlice = createSlice({
       .addCase(removeCluster.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = true;
-        state.clusters = state.clusters.filter(cluster => cluster.id !== action.payload.cluster_id);
-        if (state.selectedCluster?.id === action.payload.cluster_id) {
-          state.selectedCluster = null;
+        if (action.payload?.cluster_id) {
+          state.clusters = state.clusters.filter(
+            cluster => cluster.id !== action.payload.cluster_id
+          );
+          if (state.selectedCluster?.id === action.payload.cluster_id) {
+            state.selectedCluster = null;
+          }
         }
       })
       
@@ -201,26 +220,27 @@ const clusterSlice = createSlice({
       .addCase(findHostForVM.fulfilled, (state, action) => {
         state.isLoading = false;
         state.suitableHost = action.payload;
+        console.log(action.payload);
       })
-    //     // Common pending state
-    //   .addMatcher(
-    //     (action) => action.type.startsWith('cluster/') && action.type.endsWith('/pending'),
-    //     (state) => {
-    //       state.isLoading = true;
-    //       state.error = null;
-    //       state.success = false;
-    //     }
-    //   )
       
-    //   // Common rejected state
-    //   .addMatcher(
-    //     (action) => action.type.startsWith('cluster/') && action.type.endsWith('/rejected'),
-    //     (state, action) => {
-    //       state.isLoading = false;
-    //       state.error = action.payload;
-    //     }
-    //   )
-    //   ;
+      // Common pending state
+      .addMatcher(
+        (action) => action.type.startsWith('cluster/') && action.type.endsWith('/pending'),
+        (state) => {
+          state.isLoading = true;
+          state.error = null;
+          state.success = false;
+        }
+      )
+      
+      // Common rejected state
+      .addMatcher(
+        (action) => action.type.startsWith('cluster/') && action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      );
   }
 });
 
@@ -232,13 +252,13 @@ export const {
 } = clusterSlice.actions;
 export default clusterSlice.reducer;
 
-// Selectors
-export const selectAllClusters = (state) => state.cluster?.clusters ?? [];
-export const selectAvailableClusters = (state) => state.cluster?.availableClusters ?? [];
-export const selectSelectedCluster = (state) => state.cluster?.selectedCluster;
-export const selectSuitableHost = (state) => state.cluster?.suitableHost;
-export const selectClusterHealth = (state) => state.cluster?.healthStatus;
-export const selectClusterInfo = (state) => state.cluster?.serviceInfo;
-export const selectClusterLoading = (state) => state.cluster?.isLoading;
-export const selectClusterError = (state) => state.cluster?.error;
-export const selectClusterSuccess = (state) => state.cluster?.success;
+// Selectors with proper fallbacks
+export const selectAllClusters = (state) => state?.cluster?.clusters || [];
+export const selectAvailableClusters = (state) => state?.cluster?.availableClusters || [];
+export const selectSelectedCluster = (state) => state?.cluster?.selectedCluster || null;
+export const selectSuitableHost = (state) => state?.cluster?.suitableHost || null;
+export const selectClusterHealth = (state) => state?.cluster?.healthStatus || null;
+export const selectClusterInfo = (state) => state?.cluster?.serviceInfo || null;
+export const selectClusterLoading = (state) => state?.cluster?.isLoading || false;
+export const selectClusterError = (state) => state?.cluster?.error || null;
+export const selectClusterSuccess = (state) => state?.cluster?.success || false;

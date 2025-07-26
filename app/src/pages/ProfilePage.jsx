@@ -47,7 +47,7 @@ const UserProfilePage = () => {
 
   const [tabIndex, setTabIndex] = useState(0);
   const [profileData, setProfileData] = useState({
-    name: '',
+    username: '',
     email: ''
   });
   const [passwordData, setPasswordData] = useState({
@@ -61,7 +61,7 @@ const UserProfilePage = () => {
   useEffect(() => {
     if (user) {
       setProfileData({
-        name: user.username || '',
+        username: user.username || '',
         email: user.email || ''
       });
     }
@@ -78,7 +78,7 @@ const UserProfilePage = () => {
     e.preventDefault();
     clearErrors();
 
-    if (!profileData.name.trim() || !profileData.email.trim()) {
+    if (!profileData.username.trim() || !profileData.email.trim()) {
       return;
     }
 
@@ -112,8 +112,8 @@ const UserProfilePage = () => {
     if (!validatePassword()) return;
 
     await changePassword({
-      currentPassword: passwordData.currentPassword,
-      newPassword: passwordData.newPassword
+      password: passwordData.currentPassword,
+      new_password: passwordData.newPassword
     });
     
     if (!error) {
@@ -130,6 +130,8 @@ const UserProfilePage = () => {
     setDeleteConfirmOpen(false);
     await deleteProfile(user.id);
   };
+
+  console.log("is loading : ",isLoading);
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
@@ -309,8 +311,8 @@ const UserProfilePage = () => {
               <TextField
                 fullWidth
                 label={t('profile.fields.name')}
-                value={profileData.name}
-                onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                value={profileData.username}
+                onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
                 required
                 variant="outlined"
                 sx={{ borderRadius: 2 }}

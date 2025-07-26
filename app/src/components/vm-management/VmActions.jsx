@@ -33,11 +33,10 @@ import {
   Dns as DnsIcon,
   Memory as MemoryIcon,
   Storage as StorageIcon
-  
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import useUser  from '../../hooks/useUser';
-import useVmHost  from '../../hooks/useVmHost';
+import useUser from '../../hooks/useUser';
+import useVmHost from '../../hooks/useVmHost';
 import StatusChip from './StatusChip';
 import VmDetailsDialog from './VmDetailsDialog';
 import ConfirmationDialog from './ConfirmationDialog';
@@ -45,7 +44,7 @@ import ConfirmationDialog from './ConfirmationDialog';
 const VmActions = () => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { currentUser } = useUser();
+  const { user } = useUser();
   const { 
     vms, 
     getUserVms, 
@@ -69,12 +68,12 @@ const VmActions = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
 
-  // Fetch VMs on component mount and when currentUser changes
+  // Fetch VMs on component mount and when user changes
   useEffect(() => {
-    if (currentUser?.id) {
+    if (user?.id) {
       fetchVms();
     }
-  }, [currentUser]);
+  }, [user]);
 
   // Filter VMs when search term or vms change
   useEffect(() => {
@@ -90,7 +89,7 @@ const VmActions = () => {
 
   const fetchVms = async () => {
     try {
-      await getUserVms(currentUser.id);
+      await getUserVms(user.id);
     } catch (err) {
       console.error('Failed to fetch VMs:', err);
     }
@@ -99,7 +98,7 @@ const VmActions = () => {
   const fetchVmMetrics = async (vm) => {
     setLoadingMetrics(true);
     try {
-      const result = await getVmMetrics(currentUser.id, vm.name);
+      const result = await getVmMetrics(user.id, vm.name);
       if (result.success) {
         setMetrics(result.data);
       }
@@ -120,7 +119,7 @@ const VmActions = () => {
 
     try {
       let result;
-      const actionData = { user_id: currentUser.id, vm_id: vm.id };
+      const actionData = { user_id: user.id, vm_id: vm.id };
 
       switch (action) {
         case 'start':
@@ -138,7 +137,7 @@ const VmActions = () => {
         case 'delete':
           result = await deleteVm(actionData);
           if (result.success) {
-            setSuccessMessage(t('vmActions.notifications.deleted', { name: vm.name }));
+            setSuccessMessage(t('vmActions.notifications.deleted', vm.name ));
           }
           break;
         default:
@@ -238,7 +237,7 @@ const VmActions = () => {
                   <CircularProgress size={24} sx={{ my: 3 }} />
                 </TableCell>
               </TableRow>
-            ) : filteredVms.length === 0 ? (
+            ) : filteredVms?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   <Box sx={{ py: 3 }}>
@@ -253,7 +252,7 @@ const VmActions = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              filteredVms.map((vm) => (
+              filteredVms?.map((vm) => (
                 <TableRow key={vm.id} hover>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -304,7 +303,7 @@ const VmActions = () => {
                   </TableCell>
                   <TableCell align="right">
                     <ButtonGroup variant="outlined" size="small">
-                      {vm.status === 'stopped' && (
+                      {vm.status === 'stopped' || vm.status === 'created' ? (
                         <Tooltip title={t('vmActions.actions.start')}>
                           <Button 
                             color="success" 
@@ -314,19 +313,33 @@ const VmActions = () => {
                             <StartIcon fontSize="small" />
                           </Button>
                         </Tooltip>
-                      )}
-                      
-                      {vm.status === 'running' && (
+                      ) : (
                         <Tooltip title={t('vmActions.actions.stop')}>
                           <Button 
                             color="warning" 
-                            onClick={() => setConfirmStopOpen(true)}
+                            onClick={() => {
+                              setSelectedVm(vm);
+                              setConfirmStopOpen(true);
+                            }}
                             disabled={actionLoading}
                           >
                             <StopIcon fontSize="small" />
                           </Button>
                         </Tooltip>
                       )}
+                      
+                      <Tooltip title={t('vmActions.actions.delete')}>
+                        <Button 
+                          color="error" 
+                          onClick={() => {
+                            setSelectedVm(vm);
+                            setConfirmDeleteOpen(true);
+                          }}
+                          disabled={actionLoading}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </Button>
+                      </Tooltip>
                       
                       <Tooltip title={t('vmActions.actions.details')}>
                         <Button 
@@ -358,7 +371,14 @@ const VmActions = () => {
         loadingMetrics={loadingMetrics}
         onRefreshMetrics={() => selectedVm && fetchVmMetrics(selectedVm)}
         onStart={() => handleAction('start', selectedVm)}
-        onStop={() => handleAction('stop', selectedVm)}
+        onStop={() => {
+          setViewDetailsOpen(false);
+          setConfirmStopOpen(true);
+        }}
+        onDelete={() => {
+          setViewDetailsOpen(false);
+          setConfirmDeleteOpen(true);
+        }}
       />
       
       {/* Confirm Stop Dialog */}
@@ -366,9 +386,8 @@ const VmActions = () => {
         open={confirmStopOpen}
         onClose={() => setConfirmStopOpen(false)}
         onConfirm={() => handleAction('stop', selectedVm)}
-        titleKey="stopTitle"
-        messageKey="stopMessage"
-        messageValues={{ name: selectedVm?.name }}
+        title={t('vmActions.confirmStopTitle')}
+        message={t('vmActions.confirmStopMessage', { name: selectedVm?.name })}
         confirmButtonColor="warning"
         loading={actionLoading}
       />
@@ -378,9 +397,8 @@ const VmActions = () => {
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={() => handleAction('delete', selectedVm)}
-        titleKey="deleteTitle"
-        messageKey="deleteMessage"
-        messageValues={{ name: selectedVm?.name }}
+        title={t('vmActions.confirmDeleteTitle')}
+        message={t('vmActions.confirmDeleteMessage', { name: selectedVm?.name })}
         confirmButtonColor="error"
         loading={actionLoading}
       />

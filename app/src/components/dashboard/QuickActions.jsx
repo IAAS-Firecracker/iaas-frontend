@@ -9,16 +9,19 @@ import {
   Report as ReportIcon
 } from '@mui/icons-material';
 import { useTheme, alpha } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const QuickActions = ({ isAdmin, onCreateVm, t }) => {
   const theme = useTheme();
+
+  const navigate = useNavigate();
 
   const userActions = [
     { 
       title: t('dashboard.quickActions.manageVms'), 
       description: t('dashboard.quickActions.manageVmsDesc'), 
       icon: <SettingsIcon />, 
-      onClick: () => console.log('Manage VMs') 
+      onClick: () =>  navigate('/vms')
     },
     { 
       title: t('dashboard.quickActions.configureFirewalls'), 
@@ -39,7 +42,7 @@ const QuickActions = ({ isAdmin, onCreateVm, t }) => {
       title: t('dashboard.quickActions.addUser'), 
       description: t('dashboard.quickActions.addUserDesc'), 
       icon: <PersonAddIcon />, 
-      onClick: () => console.log('Add User') 
+      onClick: () => navigate('/users') 
     },
     { 
       title: t('dashboard.quickActions.systemSettings'), 

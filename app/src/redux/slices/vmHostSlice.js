@@ -19,7 +19,7 @@ export const fetchUserVms = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await vmHostApi.getVms(userId);
-      return response.data.data.vms;
+      return response.data.data.data.vms;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch user VMs');
     }
@@ -79,7 +79,7 @@ export const getVmStatus = createAsyncThunk(
   async (vmStatusData, { rejectWithValue }) => {
     try {
       const response = await vmHostApi.statusVm(vmStatusData);
-      return { vmId: vmStatusData.vm_id, ...response.data.data };
+      return { vmId: vmStatusData.vm_id, ...response.data.data.data };
     } catch (error) {
       return rejectWithValue(error.response?.data || `Failed to get status for VM ${vmStatusData.vm_id}`);
     }

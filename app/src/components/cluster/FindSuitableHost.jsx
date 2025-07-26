@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useCluster from '../../hooks/useCluster';
 import useSystemImage from '../../hooks/useSystemImage';
 import useVmOffer from '../../hooks/useVmOffer';
+import useUser from '../../hooks/useUser'; // Import the user hook
 import {
   Box,
   Typography,
@@ -63,9 +64,12 @@ const FindSuitableHost = () => {
     activeOffers: vmOffers,
     isLoading: offersLoading,
     error: offersError,
-
     getActiveVmOffers
   } = useVmOffer();
+
+  const {
+    user
+  } = useUser(); // Get current user
 
   // State
   const [activeStep, setActiveStep] = useState(0);
@@ -75,13 +79,15 @@ const FindSuitableHost = () => {
     memory_size_mib: 2048,
     disk_size_gb: 40,
     os_type: 'linux',
-    system_image_id: 1,
+    system_image_id: '',
     root_password: '',
-    vm_offer_id: null
+    vm_offer_id: '',
+    user_id: user?.id || '' // Initialize with user ID
   });
   const [createdVm, setCreatedVm] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [isCustomOffer, setIsCustomOffer] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // Fetch data on mount
   useEffect(() => {
@@ -92,6 +98,16 @@ const FindSuitableHost = () => {
     fetchData();
   }, [getSystemImages, getActiveVmOffers]);
 
+  // Update user_id when user changes
+  useEffect(() => {
+    if (user?.id) {
+      setFormData(prev => ({
+        ...prev,
+        user_id: `${user.id}`
+      }));
+    }
+  }, [user]);
+
   // Set default offer when vmOffers loads
   useEffect(() => {
     if (vmOffers.length > 0 && !selectedOffer) {
@@ -99,7 +115,7 @@ const FindSuitableHost = () => {
       setSelectedOffer(defaultOffer);
       setFormData(prev => ({
         ...prev,
-        vm_offer_id: defaultOffer.id,
+        vm_offer_id: `${defaultOffer.id}`,
         cpu_count: defaultOffer.cpu_count,
         memory_size_mib: defaultOffer.memory_size_mib,
         disk_size_gb: defaultOffer.disk_size_gb
@@ -107,19 +123,30 @@ const FindSuitableHost = () => {
     }
   }, [vmOffers, selectedOffer]);
 
+  // Set default image when systemImages loads
+  useEffect(() => {
+    if (systemImages.length > 0 && !selectedImage) {
+      const defaultImage = systemImages.find(img => img.type === 'linux') || systemImages[0];
+      setSelectedImage(defaultImage);
+      setFormData(prev => ({
+        ...prev,
+        system_image_id: `${defaultImage.id}`,
+        os_type: defaultImage.type
+      }));
+    }
+  }, [systemImages, selectedImage]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === 'cpu_count' || name === 'memory_size_mib' || 
-              name === 'disk_size_gb' || name === 'system_image_id' || 
-              name === 'vm_offer_id' ? Number(value) : value
+      [name]: value
     });
   };
 
   const handleOfferChange = (event) => {
-    const offerId = Number(event.target.value);
-    const offer = vmOffers.find(o => o.id === offerId);
+    const offerId = event.target.value;
+    const offer = vmOffers.find(o => o.id === Number(offerId));
     
     setSelectedOffer(offer);
     setIsCustomOffer(offer.name === 'Custom');
@@ -136,10 +163,11 @@ const FindSuitableHost = () => {
   };
 
   const handleImageChange = (event) => {
-    const imageId = Number(event.target.value);
-    const image = systemImages.find(img => img.id === imageId);
+    const imageId = event.target.value;
+    const image = systemImages.find(img => img.id === Number(imageId));
     
     if (image) {
+      setSelectedImage(image);
       setFormData({
         ...formData,
         system_image_id: imageId,
@@ -150,12 +178,36 @@ const FindSuitableHost = () => {
 
   const handleSubmit = async () => {
     clearClusterErrors();
-    const { success, data } = await findSuitableHost(formData);
+    
+    // Prepare the data in the correct format
+    const submissionData = {
+      cpu_count: formData.cpu_count,
+      memory_size_mib: formData.memory_size_mib,
+      disk_size_gb: formData.disk_size_gb,
+      name: formData.name,
+      user_id: formData.user_id,
+      os_type: formData.os_type,
+      root_password: formData.root_password,
+      vm_offer_id: formData.vm_offer_id,
+      system_image_id: formData.system_image_id
+    };
+
+    console.log("Submitting VM creation form:", submissionData);
+    
+    const { success, data } = await findSuitableHost(submissionData);
+    console.log("success : ",success," vm : ",data);
     if (success) {
-      setCreatedVm(data.vm);
+      setCreatedVm(data);
       setActiveStep(2);
     }
   };
+
+ 
+
+ 
+
+ 
+
 
   const handleReset = () => {
     setActiveStep(0);
@@ -164,7 +216,7 @@ const FindSuitableHost = () => {
   };
 
   const getStatusColor = (status) => {
-    switch(status.toLowerCase()) {
+    switch(status?.toLowerCase()) {
       case 'active':
       case 'running':
         return theme.palette.success.main;
@@ -236,7 +288,7 @@ const FindSuitableHost = () => {
               >
                 {systemImages.map((image) => (
                   <MenuItem key={image.id} value={image.id}>
-                    {image.name} ({image.type})
+                    {image.name} ({image.os_type})
                   </MenuItem>
                 ))}
               </Select>
@@ -315,7 +367,7 @@ const FindSuitableHost = () => {
             </Alert>
           )}
 
-          {clusterSuccess && createdVm ? (
+          {/* {createdVm ? (
             <Card sx={{ mb: 3 }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -349,7 +401,7 @@ const FindSuitableHost = () => {
               <CircularProgress />
               <Typography sx={{ mt: 2 }}>{t('creatingVm')}</Typography>
             </Box>
-          )}
+          )} */}
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
@@ -364,7 +416,7 @@ const FindSuitableHost = () => {
     }
   ];
 
-  return (
+   return (
     <Box sx={{ maxWidth: 800, mx: 'auto' }}>
       <Paper sx={{ p: 3, mb: 3 }}>
         <Typography variant="h5" gutterBottom>
@@ -402,7 +454,7 @@ const FindSuitableHost = () => {
                       <Button
                         variant="contained"
                         onClick={() => setActiveStep(prev => prev + 1)}
-                        disabled={!formData.name || !formData.root_password}
+                        disabled={!formData.name || !formData.root_password || !formData.user_id}
                       >
                         {t('next')}
                       </Button>
